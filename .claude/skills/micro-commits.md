@@ -1,3 +1,8 @@
+---
+allowed-tools: Bash(git add:*), Bash(git commit:*), Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git show:*), Bash(git stash:*), Bash(git restore:*)
+description: Agrupa arquivos por feature e cria micro commits atômicos sem quebrar o projeto
+---
+
 # Skill: Micro Commits por Feature
 
 ## Descrição
