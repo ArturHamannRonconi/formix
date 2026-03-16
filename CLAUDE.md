@@ -63,11 +63,14 @@ module/
 
 ## Guidelines de desenvolvimento
 
-1. **Leia a documentação antes de implementar** — `docs/` contém arquitetura, modelagem, regras de domínio e padrões
-2. **Siga o DDD** — regras de negócio ficam na domain layer, nunca nos controllers
-3. **Um módulo por contexto** — respeite as boundaries entre módulos (ver `docs/boundaries/`)
-4. **Código simples** — evite abstrações prematuras, mantenha o mínimo necessário
-5. **Testes** — todo usecase deve ter testes unitários; controllers devem ter testes de integração
+1. **TDD obrigatório** — toda feature começa pelos testes. Escreva o teste primeiro (Red), implemente o mínimo para passar (Green), refatore (Refactor)
+2. **Leia a documentação antes de implementar** — `docs/` contém arquitetura, modelagem, regras de domínio e padrões
+3. **Siga o DDD** — regras de negócio ficam na domain layer, nunca nos controllers
+4. **Um módulo por contexto** — respeite as boundaries entre módulos (ver `docs/boundaries/`)
+5. **Código simples** — evite abstrações prematuras, mantenha o mínimo necessário
+6. **Testes unitários** (`.spec.ts`) — usecases, entities, value objects. Sem dependências externas
+7. **Testes de integração** (`.test.ts`) — controllers, repositories. Testam integração com NestJS e MongoDB
+8. **Cada arquivo tem seu teste** — framework de testes: Jest (backend apenas, frontend sem testes por enquanto)
 
 ## Como Claude deve ajudar
 
