@@ -52,8 +52,20 @@ module/
 - **responses** — Coleta anônima de respostas
 - **analytics** — Dashboards e estatísticas
 
+## Testes e TDD
+
+O projeto segue **TDD (Test-Driven Development)** com **Jest**.
+
+| Tipo de teste | Extensão | O que testa |
+|---|---|---|
+| Unitário | `.spec.ts` | Usecases, entities, value objects |
+| Integração | `.test.ts` | Controllers, repositories |
+
+Cada arquivo de código deve ter seu arquivo de teste correspondente. O frontend não possui testes neste momento.
+
 ## Regras fundamentais
 
 1. Domain layer não importa infra
 2. Toda query filtra por `organizationId` (multi-tenant)
 3. Respostas são anônimas — emails armazenados separadamente para controle de duplicidade
+4. TDD — toda feature começa pelos testes
