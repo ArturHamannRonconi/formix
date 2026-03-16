@@ -24,6 +24,7 @@ O projeto é um **monorepo** composto por:
 - Oferecer configurações avançadas por formulário: expiração, limite de respostas, restrição de domínio, permissão de múltiplas respostas
 - Seguir DDD simplificado no backend com separação clara domain/infra
 - Seguir padrões de componentes reutilizáveis e acessíveis no frontend
+- Desenvolvimento guiado por **TDD** — toda feature começa pelos testes, que definem se a implementação está correta
 
 ---
 
@@ -43,6 +44,7 @@ O projeto é um **monorepo** composto por:
 - [ ] Configurar variáveis de ambiente (.env) com validação
 - [ ] Configurar ESLint + Prettier
 - [ ] Configurar scripts de desenvolvimento (`dev`, `build`, `start`, `test`)
+- [ ] Configurar Jest como framework de testes
 - [ ] Conexão com MongoDB funcionando
 - [ ] Typecheck passa
 
@@ -858,7 +860,8 @@ O projeto é um **monorepo** composto por:
 - **Não haverá** upload real de arquivos (tipo `file` pode ser placeholder para MVP)
 - **Não haverá** suporte a múltiplas organizações no frontend (seletor de org) — assumir organização fixa por sessão
 - **Não haverá** rate limiting ou proteção contra bots nas rotas públicas (pode ser adicionado depois)
-- **Não haverá** testes E2E — apenas unitários e integração
+- **Não haverá** testes E2E — apenas unitários e integração no backend
+- **Não haverá** testes no frontend neste momento
 
 ---
 
@@ -906,6 +909,22 @@ analytics → responses, forms
 - Tokens de convite e confirmação com expiração
 - Validação de input em todas as boundaries (DTOs com class-validator)
 - Sanitização de dados antes de persistir
+
+### Testes e TDD
+- O projeto é guiado por **TDD (Test-Driven Development)**: toda feature começa pelos testes — eles definem o comportamento esperado e determinam se a implementação está correta
+- **Framework**: Jest (backend apenas; frontend não tem testes neste momento)
+- **Cada arquivo de código tem seu arquivo de teste correspondente**
+- **Testes unitários** (`.spec.ts`): usecases, entities, value objects — testam regras de negócio isoladamente, sem dependências externas (mocks para repositórios)
+- **Testes de integração** (`.test.ts`): controllers, repositories — testam integração com NestJS e MongoDB
+- Fluxo TDD: **Red** (escrever teste que falha) → **Green** (código mínimo para passar) → **Refactor** (melhorar mantendo testes passando)
+
+| Tipo de arquivo | Extensão de teste | Tipo de teste |
+|---|---|---|
+| `*.usecase.ts` | `*.usecase.spec.ts` | Unitário |
+| `*.entity.ts` | `*.entity.spec.ts` | Unitário |
+| `*.vo.ts` | `*.vo.spec.ts` | Unitário |
+| `*.controller.ts` | `*.controller.test.ts` | Integração |
+| `*-*.repository.ts` | `*-*.repository.test.ts` | Integração |
 
 ### Frontend
 - Next.js App Router com rotas baseadas em arquivos

@@ -59,6 +59,18 @@ Regras:
 | `responses` | Recebimento e armazenamento anônimo de respostas |
 | `analytics` | Agregações e estatísticas de respostas |
 
+## Testes e TDD
+
+O desenvolvimento é guiado por **TDD** — toda feature começa pelos testes. Os testes definem o comportamento esperado e o código é escrito para fazê-los passar.
+
+- **Framework**: Jest
+- **Testes unitários** (`.spec.ts`): usecases, entities, value objects — testam regras de negócio sem dependências externas
+- **Testes de integração** (`.test.ts`): controllers, repositories — testam integração com NestJS e MongoDB
+- Cada arquivo de código deve ter seu arquivo de teste correspondente
+- **Frontend não tem testes** neste momento
+
+Fluxo: Red (teste falha) → Green (código mínimo) → Refactor (melhorar mantendo testes passando)
+
 ## Padrões de código
 
 - Um usecase por arquivo
