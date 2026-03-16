@@ -12,7 +12,12 @@
       "Bash(git stash:*)",
       "Bash(git restore:*)",
       "Bash(gh auth:*)",
-      "Bash(gh repo:*)"
+      "Bash(gh repo:*)",
+      "Bash(git:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//home/arturronconi/personal-projects/formix/**)",
+      "Bash(done)"
     ]
   }
 }
