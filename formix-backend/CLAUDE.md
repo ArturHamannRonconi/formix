@@ -6,6 +6,7 @@
 - NestJS
 - MongoDB (Mongoose)
 - TypeScript
+- Swagger / OpenAPI (`@nestjs/swagger`)
 
 ## Estrutura do src
 
@@ -70,6 +71,51 @@ O desenvolvimento é guiado por **TDD** — toda feature começa pelos testes. O
 - **Frontend não tem testes** neste momento
 
 Fluxo: Red (teste falha) → Green (código mínimo) → Refactor (melhorar mantendo testes passando)
+
+## Documentação de API (Swagger / OpenAPI)
+
+**Regra obrigatória: toda rota nova deve ter documentação Swagger completa.**
+
+Toda vez que um controller ou endpoint for criado ou modificado, é obrigatório adicionar os decorators do `@nestjs/swagger`:
+
+```typescript
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiTags('forms')
+@Controller('forms')
+export class FormController {
+
+  @Post()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Criar formulário' })
+  @ApiBody({ type: CreateFormDto })
+  @ApiResponse({ status: 201, description: 'Formulário criado com sucesso', type: FormResponseDto })
+  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
+  async create(@Body() dto: CreateFormDto): Promise<FormResponseDto> { ... }
+}
+```
+
+**Checklist obrigatório para cada endpoint:**
+- `@ApiTags('nome-do-modulo')` no controller
+- `@ApiOperation({ summary: '...' })` em cada método
+- `@ApiBody({ type: Dto })` em rotas com body (POST, PUT, PATCH)
+- `@ApiResponse({ status, description, type })` para cada status possível (201, 200, 400, 401, 403, 404, 409...)
+- `@ApiBearerAuth()` em rotas autenticadas
+- DTOs de request e response decorados com `@ApiProperty()` (ou `@ApiPropertyOptional()` para opcionais)
+
+**DTOs devem usar `@ApiProperty`:**
+```typescript
+export class CreateFormDto {
+  @ApiProperty({ example: 'Pesquisa de satisfação', description: 'Título do formulário' })
+  title: string;
+
+  @ApiPropertyOptional({ example: 'Formulário anônimo de satisfação' })
+  description?: string;
+}
+```
+
+O Swagger UI fica disponível em `GET /api/docs` (configurado em `src/main.ts`).
 
 ## Padrões de código
 

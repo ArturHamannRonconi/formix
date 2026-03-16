@@ -38,15 +38,15 @@ O projeto é um **monorepo** composto por:
 **Descrição:** Como desenvolvedor, eu preciso inicializar o projeto backend com NestJS, TypeScript e MongoDB para que a base de código esteja pronta para desenvolvimento.
 
 **Acceptance Criteria:**
-- [ ] Inicializar projeto NestJS com TypeScript strict
-- [ ] Configurar MongoDB com Mongoose como ODM
-- [ ] Criar estrutura de diretórios DDD: `src/modules/`, `src/core/database/`, `src/core/environment/`, `src/server/middlewares/`, `src/server/routes/`, `src/shared/`, `src/utils/`
-- [ ] Configurar variáveis de ambiente (.env) com validação
-- [ ] Configurar ESLint + Prettier
-- [ ] Configurar scripts de desenvolvimento (`dev`, `build`, `start`, `test`)
-- [ ] Configurar Jest como framework de testes
-- [ ] Conexão com MongoDB funcionando
-- [ ] Typecheck passa
+- [x] Inicializar projeto NestJS com TypeScript strict
+- [x] Configurar MongoDB com Mongoose como ODM
+- [x] Criar estrutura de diretórios DDD: `src/modules/`, `src/core/database/`, `src/core/environment/`, `src/server/middlewares/`, `src/server/routes/`, `src/shared/`, `src/utils/`
+- [x] Configurar variáveis de ambiente (.env) com validação
+- [x] Configurar ESLint + Prettier
+- [x] Configurar scripts de desenvolvimento (`dev`, `build`, `start`, `test`)
+- [x] Configurar Jest como framework de testes
+- [x] Conexão com MongoDB funcionando
+- [x] Typecheck passa
 
 ---
 
