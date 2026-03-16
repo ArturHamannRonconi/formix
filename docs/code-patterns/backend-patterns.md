@@ -101,11 +101,20 @@ export interface IFormRepository {
 
 ```typescript
 // infra/controllers/form.controller.ts
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+
+@ApiTags('forms')
 @Controller('forms')
 export class FormController {
   constructor(private readonly createForm: CreateFormUseCase) {}
 
   @Post()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Criar formulário' })
+  @ApiBody({ type: CreateFormDto })
+  @ApiResponse({ status: 201, description: 'Formulário criado com sucesso', type: FormResponseDto })
+  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ status: 401, description: 'Não autenticado' })
   async create(@Body() dto: CreateFormDto): Promise<FormResponseDto> {
     const form = await this.createForm.execute(dto);
     return FormMapper.toDto(form);
@@ -118,6 +127,33 @@ export class FormController {
 - Valida input (DTOs com class-validator)
 - Delega para usecases
 - Converte resposta para DTO
+- **Toda rota deve ter documentação Swagger completa** — `@ApiTags`, `@ApiOperation`, `@ApiResponse` (todos os status), `@ApiBearerAuth` em rotas autenticadas
+
+## Estrutura de um DTO
+
+DTOs de request e response devem usar `@ApiProperty` para aparecerem documentados no Swagger:
+
+```typescript
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsOptional } from 'class-validator';
+
+export class CreateFormDto {
+  @ApiProperty({ example: 'Pesquisa de satisfação', description: 'Título do formulário' })
+  @IsString()
+  title: string;
+
+  @ApiPropertyOptional({ example: 'Formulário anônimo de satisfação' })
+  @IsOptional()
+  @IsString()
+  description?: string;
+}
+```
+
+**Regras:**
+- `@ApiProperty()` em campos obrigatórios
+- `@ApiPropertyOptional()` em campos opcionais
+- Sempre incluir `example` para facilitar testes no Swagger UI
+- DTOs de response também devem ser decorados (o Swagger usa o tipo para gerar o schema da resposta)
 
 ## Testes e TDD
 
