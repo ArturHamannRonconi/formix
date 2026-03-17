@@ -19,7 +19,12 @@
       "Read(//home/arturronconi/personal-projects/formix/**)",
       "Bash(done)",
       "Bash(gh label:*)",
-      "Bash(gh issue:*)"
+      "Bash(gh issue:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx jest:*)"
     ]
   }
 }

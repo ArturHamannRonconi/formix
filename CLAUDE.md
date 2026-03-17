@@ -72,6 +72,40 @@ module/
 7. **Testes de integração** (`.test.ts`) — controllers, repositories. Testam integração com NestJS e MongoDB
 8. **Cada arquivo tem seu teste** — framework de testes: Jest (backend apenas, frontend sem testes por enquanto)
 
+## Estrutura de features e progresso
+
+### `docs/features/progress.md`
+
+Este arquivo é o **tracker central de progresso** de todas as features do projeto. Antes de qualquer implementação, consulte-o para saber o que já foi feito e o que vem a seguir.
+
+### `docs/features/<nome-da-feature>/`
+
+Cada subpasta dentro de `docs/features/` representa uma feature ou fase do projeto e contém:
+- O PRD da feature (ex: `prd-formix.md`)
+- A pasta `plans/` com subpastas por fase, cada uma agrupando o plano da fase e seus US plans
+
+### Estrutura de `plans/`
+
+```
+plans/
+  phase-1-nome/               → subpasta da fase
+    phase-1-nome.md           → plano geral da fase (ordem de execução, contexto)
+    us-001-nome.md            → plano detalhado de cada US da fase
+    us-002-nome.md
+  phase-2-nome/
+    phase-2-nome.md
+    us-010-nome.md
+```
+
+### Como dar continuidade às features
+
+Quando o usuário pedir para continuar criando features:
+1. Leia `docs/features/progress.md` para identificar a última feature concluída (você não precisa ler o arquivo inteiro, basta utilizar algo como tail -n 30 para ler as últimas 30 linhas ou mais se necessário)
+2. Identifique a próxima feature/US pendente no plano
+3. Leia o PRD e o plano correspondente em `docs/features/<feature>/plans/<phase>/`
+4. Implemente seguindo TDD e as guidelines deste arquivo
+5. Atualize `docs/features/progress.md` ao concluir cada US
+
 ## Como Claude deve ajudar
 
 - Consultar `docs/` para entender regras antes de gerar código
