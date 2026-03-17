@@ -44,6 +44,49 @@ formix/
     └── skills/          # Skills para geração padronizada
 ```
 
+## Rodando o projeto
+
+### Pré-requisitos
+
+- Node.js LTS
+- MongoDB rodando localmente (ou URI configurada no `.env`)
+
+### Primeira vez
+
+```bash
+# Copiar variáveis de ambiente
+cp formix-backend/.env.example formix-backend/.env
+cp formix-frontend/.env.example formix-frontend/.env.local
+
+# Instalar dependências
+npm install --prefix formix-backend && npm install --prefix formix-frontend
+```
+
+### Iniciar frontend e backend juntos
+
+```bash
+npx concurrently \
+  "npm run dev --prefix formix-backend" \
+  "npm run dev --prefix formix-frontend"
+```
+
+| Serviço  | URL                   |
+|----------|-----------------------|
+| Frontend | http://localhost:3000 |
+| Backend  | http://localhost:3001 |
+
+### Iniciar separadamente
+
+```bash
+# Backend (terminal 1)
+cd formix-backend && npm run dev
+
+# Frontend (terminal 2)
+cd formix-frontend && npm run dev
+```
+
+---
+
 ## Documentação
 
 Consulte o diretório `docs/` para informações detalhadas sobre:
