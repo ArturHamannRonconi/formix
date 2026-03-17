@@ -17,7 +17,9 @@
       "Bash(for f:*)",
       "Bash(do echo:*)",
       "Read(//home/arturronconi/personal-projects/formix/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(gh label:*)",
+      "Bash(gh issue:*)"
     ]
   }
 }
