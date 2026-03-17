@@ -238,7 +238,7 @@ interface IEmailService {
 
 ---
 
-## 5. US-003: Comunicação Frontend → Backend
+## 5. US-003: Comunicação Frontend → Backend ✅ Concluído
 
 ### 5.1 Instalar Axios
 ```bash
