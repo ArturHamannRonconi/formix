@@ -117,13 +117,78 @@ export class CreateFormDto {
 
 O Swagger UI fica disponível em `GET /api/docs` (configurado em `src/main.ts`).
 
-## Padrões de código
+## Padrões de código obrigatórios
 
-- Um usecase por arquivo
-- Usecases recebem dependências via construtor (injeção de dependência do NestJS)
-- Entities possuem métodos de domínio (não são anêmicas)
-- Value objects são imutáveis
-- Validação de input nos controllers, validação de regra de negócio nos usecases/entities
+### 1 Aggregate por módulo = 1 coleção MongoDB
+
+Cada módulo tem exatamente 1 classe Aggregate que representa um documento inteiro no banco:
+- `UserAggregate` ↔ coleção `users`
+- `FormAggregate` ↔ coleção `forms`
+
+O Aggregate pode conter:
+- **Entities internas** (geralmente em arrays) — têm identidade própria via IDValueObject (ex: `SessionEntity[]`)
+- **Value objects** — propriedade única com regra de negócio embutida (ex: `Email`, `Password`)
+
+### IDValueObject obrigatório
+
+Toda aggregate e entity possui um IDValueObject tipado — nunca `string` puro para identidade:
+
+```typescript
+export class UserId {
+  static create(): UserId { return new UserId(randomUUID()); }
+  static from(value: string): UserId { ... }
+  getValue(): string { return this.value; }
+  equals(other: UserId): boolean { return this.value === other.value; }
+}
+```
+
+### Repositório: 1 por módulo, save() é sempre upsert
+
+- 1 repositório por módulo, referente à coleção daquele módulo
+- `save(aggregate)` verifica internamente se o documento existe e faz insert ou update
+- Inputs/outputs das funções usam **tipos de domínio** (IDValueObject, Aggregate, Entity), nunca strings puras
+
+```typescript
+export interface IUserRepository {
+  save(user: UserAggregate): Promise<void>;
+  findById(id: UserId): Promise<Output<UserAggregate>>;
+  findByEmail(email: Email): Promise<Output<UserAggregate>>;
+}
+```
+
+### Acesso a entidades internas via aggregate
+
+Para acessar uma entity dentro de um aggregate, busque o aggregate via repositório e use um método do aggregate:
+
+```typescript
+const userResult = await this.userRepository.findById(userId);
+if (userResult.isFailure) return Output.fail(userResult.errorMessage);
+const session = userResult.value.findSessionById(sessionId);
+```
+
+### Output pattern — nunca throw em usecases
+
+Usecases retornam `Output<T>` e **nunca lançam exceções**. Apenas controllers convertem falhas em exceções HTTP:
+
+```typescript
+// usecase — retorna Output
+async execute(input): Promise<Output<{ id: string }>> {
+  const result = await this.repo.findById(id);
+  if (result.isFailure) return Output.fail(result.errorMessage);
+  // ...
+  return Output.ok({ id: created.id.getValue() });
+}
+
+// controller — converte em exceção HTTP
+const output = await this.useCase.execute(dto);
+if (output.isFailure) throw new BadRequestException(output.errorMessage);
+```
+
+**Exceção à regra:** value objects e aggregates **podem** lançar erro no `create()` — isso representa dado inválido na entrada, não resultado de regra de negócio do usecase.
+
+---
+
+Ver detalhes e exemplos completos em `docs/code-patterns/backend-patterns.md`.
 
 ## Regras de negócio críticas
 
