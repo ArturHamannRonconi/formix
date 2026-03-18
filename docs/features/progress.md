@@ -365,3 +365,16 @@
 - **Arquivos modificados:**
   - `formix-backend/src/modules/organizations/organizations.module.ts`
 - **Verificação:** typecheck OK, testes OK (3 unit + 4 integration)
+
+### features/start US-020: Listar Membros — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/services/organizations/organizations.types.ts`
+  - `formix-frontend/src/services/organizations/organizations.service.ts`
+  - `formix-frontend/src/modules/MembersTable/MembersTable.tsx`
+  - `formix-frontend/src/modules/MembersTable/MembersTable.module.css`
+  - `formix-frontend/src/modules/MembersTable/RoleBadge.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
