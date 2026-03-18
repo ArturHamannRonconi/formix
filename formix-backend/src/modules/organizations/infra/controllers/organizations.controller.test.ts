@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import * as request from 'supertest';
 import { OrganizationsController } from './organizations.controller';
 import { ListMembersUseCase } from '@modules/organizations/domain/usecases/list-members.usecase';
+import { RemoveMemberUseCase } from '@modules/organizations/domain/usecases/remove-member.usecase';
 import { MongoOrganizationRepository } from '@modules/organizations/infra/repositories/mongo-organization.repository';
 import { ORGANIZATION_REPOSITORY } from '@modules/organizations/domain/repositories/organization.repository';
 import { MongoUserRepository } from '@modules/users/infra/repositories/mongo-user.repository';
@@ -60,6 +61,7 @@ describe('OrganizationsController (integration)', () => {
       controllers: [OrganizationsController],
       providers: [
         ListMembersUseCase,
+        RemoveMemberUseCase,
         { provide: ORGANIZATION_REPOSITORY, useClass: MongoOrganizationRepository },
         { provide: USER_REPOSITORY, useClass: MongoUserRepository },
         JwtStrategy,
@@ -172,6 +174,48 @@ describe('OrganizationsController (integration)', () => {
     it('should return 401 without token', async () => {
       const response = await request(app.getHttpServer())
         .get(`/organizations/${org.id.getValue()}/members`);
+
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('DELETE /organizations/:orgId/members/:userId', () => {
+    it('should return 200 when admin removes a member', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/organizations/${org.id.getValue()}/members/${memberUser.id.getValue()}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.removed).toBe(true);
+    });
+
+    it('should return 403 when non-admin tries to remove', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/organizations/${org.id.getValue()}/members/${adminUser.id.getValue()}`)
+        .set('Authorization', `Bearer ${memberToken}`);
+
+      expect(response.status).toBe(403);
+    });
+
+    it('should return 403 when orgId does not match token', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/organizations/${org.id.getValue()}/members/${memberUser.id.getValue()}`)
+        .set('Authorization', `Bearer ${otherOrgToken}`);
+
+      expect(response.status).toBe(403);
+    });
+
+    it('should return 400 when admin tries to remove themselves as last admin', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/organizations/${org.id.getValue()}/members/${adminUser.id.getValue()}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 without token', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/organizations/${org.id.getValue()}/members/${memberUser.id.getValue()}`);
 
       expect(response.status).toBe(401);
     });
