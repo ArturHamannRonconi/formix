@@ -378,3 +378,15 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/app/(app)/settings/members/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-021: Remover Membro — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/organizations/domain/usecases/remove-member.usecase.ts`
+  - `formix-backend/src/modules/organizations/domain/usecases/remove-member.usecase.spec.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.test.ts`
+  - `formix-backend/src/modules/organizations/organizations.module.ts`
+- **Verificação:** typecheck OK, testes OK (5 unit + 9 integration total)
