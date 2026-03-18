@@ -15,6 +15,8 @@ describe('SignupUseCase', () => {
       findById: jest.fn(),
       findByEmail: jest.fn(),
       findByEmailConfirmationTokenHash: jest.fn(),
+      findByRefreshTokenHash: jest.fn(),
+      findByPasswordResetTokenHash: jest.fn(),
       save: jest.fn().mockResolvedValue(undefined),
       exists: jest.fn().mockResolvedValue(false),
     };

@@ -14,6 +14,30 @@ import {
   EMAIL_CONFIRMATION_EXPIRES_IN_MS,
   APP_URL,
 } from '@modules/auth/domain/usecases/signup.usecase';
+import { ConfirmEmailUseCase } from '@modules/auth/domain/usecases/confirm-email.usecase';
+import {
+  ResendConfirmationUseCase,
+  RESEND_EMAIL_CONFIRMATION_EXPIRES_IN_MS,
+  RESEND_APP_URL,
+} from '@modules/auth/domain/usecases/resend-confirmation.usecase';
+import {
+  LoginUseCase,
+  LOGIN_JWT_SIGN_FUNCTION,
+  REFRESH_TOKEN_EXPIRES_IN_MS,
+} from '@modules/auth/domain/usecases/login.usecase';
+import {
+  RefreshTokenUseCase,
+  REFRESH_JWT_SIGN_FUNCTION,
+  REFRESH_JWT_REFRESH_SIGN_FUNCTION,
+  REFRESH_TOKEN_REFRESH_EXPIRES_IN_MS,
+} from '@modules/auth/domain/usecases/refresh-token.usecase';
+import { LogoutUseCase } from '@modules/auth/domain/usecases/logout.usecase';
+import {
+  ForgotPasswordUseCase,
+  FORGOT_PASSWORD_EXPIRES_IN_MS,
+  FORGOT_PASSWORD_APP_URL,
+} from '@modules/auth/domain/usecases/forgot-password.usecase';
+import { ResetPasswordUseCase } from '@modules/auth/domain/usecases/reset-password.usecase';
 import { UserSchemaClass, UserSchema } from '@modules/users/infra/schemas/user.schema';
 import { MongoUserRepository } from '@modules/users/infra/repositories/mongo-user.repository';
 import { USER_REPOSITORY } from '@modules/users/domain/repositories/user.repository';
@@ -43,13 +67,41 @@ describe('AuthController (integration)', () => {
       controllers: [AuthController],
       providers: [
         SignupUseCase,
+        ConfirmEmailUseCase,
+        ResendConfirmationUseCase,
+        LoginUseCase,
+        RefreshTokenUseCase,
+        LogoutUseCase,
+        ForgotPasswordUseCase,
+        ResetPasswordUseCase,
         { provide: USER_REPOSITORY, useClass: MongoUserRepository },
         { provide: ORGANIZATION_REPOSITORY, useClass: MongoOrganizationRepository },
         { provide: EMAIL_SERVICE, useValue: { send: jest.fn().mockResolvedValue(undefined) } },
         { provide: EMAIL_CONFIRMATION_EXPIRES_IN_MS, useValue: 86400000 },
+        { provide: RESEND_EMAIL_CONFIRMATION_EXPIRES_IN_MS, useValue: 86400000 },
         { provide: APP_URL, useValue: 'http://localhost:3000' },
+        { provide: RESEND_APP_URL, useValue: 'http://localhost:3000' },
+        { provide: REFRESH_TOKEN_EXPIRES_IN_MS, useValue: 604800000 },
+        { provide: REFRESH_TOKEN_REFRESH_EXPIRES_IN_MS, useValue: 604800000 },
+        { provide: FORGOT_PASSWORD_EXPIRES_IN_MS, useValue: 3600000 },
+        { provide: FORGOT_PASSWORD_APP_URL, useValue: 'http://localhost:3000' },
         {
           provide: JWT_SIGN_FUNCTION,
+          useFactory: (jwtService: JwtService) => jwtService.sign.bind(jwtService),
+          inject: [JwtService],
+        },
+        {
+          provide: LOGIN_JWT_SIGN_FUNCTION,
+          useFactory: (jwtService: JwtService) => jwtService.sign.bind(jwtService),
+          inject: [JwtService],
+        },
+        {
+          provide: REFRESH_JWT_SIGN_FUNCTION,
+          useFactory: (jwtService: JwtService) => jwtService.sign.bind(jwtService),
+          inject: [JwtService],
+        },
+        {
+          provide: REFRESH_JWT_REFRESH_SIGN_FUNCTION,
           useFactory: (jwtService: JwtService) => jwtService.sign.bind(jwtService),
           inject: [JwtService],
         },
@@ -107,6 +159,57 @@ describe('AuthController (integration)', () => {
       });
 
       expect(response.status).toBe(400);
+    });
+  });
+
+  describe('POST /auth/login', () => {
+    it('should return 401 when credentials are invalid', async () => {
+      const response = await request(app.getHttpServer()).post('/auth/login').send({
+        email: 'nonexistent@example.com',
+        password: 'SecurePass1',
+      });
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 400 when email not confirmed', async () => {
+      // Signup creates unconfirmed user
+      await request(app.getHttpServer()).post('/auth/signup').send({
+        name: 'Unconfirmed',
+        email: 'unconfirmed@example.com',
+        password: 'SecurePass1',
+        organizationName: 'Org',
+      });
+
+      const response = await request(app.getHttpServer()).post('/auth/login').send({
+        email: 'unconfirmed@example.com',
+        password: 'SecurePass1',
+      });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Email not confirmed');
+    });
+  });
+
+  describe('POST /auth/forgot-password', () => {
+    it('should return 200 even when email does not exist', async () => {
+      const response = await request(app.getHttpServer()).post('/auth/forgot-password').send({
+        email: 'notfound@example.com',
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+    });
+  });
+
+  describe('POST /auth/resend-confirmation', () => {
+    it('should return 200 even when email does not exist', async () => {
+      const response = await request(app.getHttpServer()).post('/auth/resend-confirmation').send({
+        email: 'notfound@example.com',
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
     });
   });
 });
