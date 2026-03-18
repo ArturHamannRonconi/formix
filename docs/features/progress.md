@@ -390,3 +390,14 @@
   - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.test.ts`
   - `formix-backend/src/modules/organizations/organizations.module.ts`
 - **Verificação:** typecheck OK, testes OK (5 unit + 9 integration total)
+
+### features/start US-022: Remover Membro — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/modules/MembersTable/RemoveMemberModal.tsx`
+  - `formix-frontend/src/modules/MembersTable/RemoveMemberModal.module.css`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/organizations/organizations.service.ts`
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
