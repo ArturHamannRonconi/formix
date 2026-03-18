@@ -326,3 +326,78 @@
   - `formix-frontend/src/app/not-found.tsx`
   - `formix-frontend/src/app/not-found.module.css`
 - **Verificação final:** typecheck OK, build OK
+
+### features/start US-017: Perfil do Usuário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/users/domain/usecases/get-profile.usecase.ts`
+  - `formix-backend/src/modules/users/domain/usecases/get-profile.usecase.spec.ts`
+  - `formix-backend/src/modules/users/domain/usecases/update-profile.usecase.ts`
+  - `formix-backend/src/modules/users/domain/usecases/update-profile.usecase.spec.ts`
+  - `formix-backend/src/modules/users/infra/controllers/get-profile-response.dto.ts`
+  - `formix-backend/src/modules/users/infra/controllers/update-profile.dto.ts`
+  - `formix-backend/src/modules/users/infra/controllers/users.controller.ts`
+  - `formix-backend/src/modules/users/infra/controllers/users.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/users/users.module.ts`
+- **Verificação:** typecheck OK, testes OK (8 unit + 6 integration)
+
+### features/start US-018: Perfil do Usuário — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/services/users/users.types.ts`
+  - `formix-frontend/src/services/users/users.service.ts`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/profile/page.tsx`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-019: Listar Membros da Organização — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/organizations/domain/usecases/list-members.usecase.ts`
+  - `formix-backend/src/modules/organizations/domain/usecases/list-members.usecase.spec.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/list-members-response.dto.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/organizations/organizations.module.ts`
+- **Verificação:** typecheck OK, testes OK (3 unit + 4 integration)
+
+### features/start US-020: Listar Membros — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/services/organizations/organizations.types.ts`
+  - `formix-frontend/src/services/organizations/organizations.service.ts`
+  - `formix-frontend/src/modules/MembersTable/MembersTable.tsx`
+  - `formix-frontend/src/modules/MembersTable/MembersTable.module.css`
+  - `formix-frontend/src/modules/MembersTable/RoleBadge.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-021: Remover Membro — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/organizations/domain/usecases/remove-member.usecase.ts`
+  - `formix-backend/src/modules/organizations/domain/usecases/remove-member.usecase.spec.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.test.ts`
+  - `formix-backend/src/modules/organizations/organizations.module.ts`
+- **Verificação:** typecheck OK, testes OK (5 unit + 9 integration total)
+
+### features/start US-022: Remover Membro — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/modules/MembersTable/RemoveMemberModal.tsx`
+  - `formix-frontend/src/modules/MembersTable/RemoveMemberModal.module.css`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/organizations/organizations.service.ts`
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
