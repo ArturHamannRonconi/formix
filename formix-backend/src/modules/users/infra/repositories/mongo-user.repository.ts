@@ -6,6 +6,10 @@ import { IUserRepository } from '@modules/users/domain/repositories/user.reposit
 import { UserId } from '@modules/users/domain/aggregate/value-objects/user-id.vo';
 import { EmailConfirmationTokenId } from '@modules/users/domain/aggregate/value-objects/email-confirmation-token-id.vo';
 import { EmailConfirmationTokenEntity } from '@modules/users/domain/aggregate/entities/email-confirmation-token.entity';
+import { RefreshTokenId } from '@modules/users/domain/aggregate/value-objects/refresh-token-id.vo';
+import { RefreshTokenEntity } from '@modules/users/domain/aggregate/entities/refresh-token.entity';
+import { PasswordResetTokenId } from '@modules/users/domain/aggregate/value-objects/password-reset-token-id.vo';
+import { PasswordResetTokenEntity } from '@modules/users/domain/aggregate/entities/password-reset-token.entity';
 import { Email } from '@shared/value-objects/email.vo';
 import { Password } from '@shared/value-objects/password.vo';
 import { Output } from '@shared/output';
@@ -19,6 +23,7 @@ export class MongoUserRepository implements IUserRepository {
 
   async save(user: User): Promise<void> {
     const token = user.emailConfirmationToken;
+    const passwordResetToken = user.passwordResetToken;
     await this.userModel.findOneAndUpdate(
       { _id: user.id.getValue() },
       {
@@ -33,6 +38,22 @@ export class MongoUserRepository implements IUserRepository {
                 tokenHash: token.tokenHash,
                 expiresAt: token.expiresAt,
                 createdAt: token.createdAt,
+              }
+            : null,
+          refreshTokens: user.refreshTokens.map(rt => ({
+            _id: rt.id.getValue(),
+            tokenHash: rt.tokenHash,
+            family: rt.family,
+            usedAt: rt.usedAt,
+            expiresAt: rt.expiresAt,
+            createdAt: rt.createdAt,
+          })),
+          passwordResetToken: passwordResetToken
+            ? {
+                _id: passwordResetToken.id.getValue(),
+                tokenHash: passwordResetToken.tokenHash,
+                expiresAt: passwordResetToken.expiresAt,
+                createdAt: passwordResetToken.createdAt,
               }
             : null,
           createdAt: user.createdAt,
@@ -64,6 +85,22 @@ export class MongoUserRepository implements IUserRepository {
     return Output.ok(this.toEntity(doc));
   }
 
+  async findByRefreshTokenHash(hash: string): Promise<Output<User>> {
+    const doc = await this.userModel
+      .findOne({ 'refreshTokens.tokenHash': hash })
+      .exec();
+    if (!doc) return Output.fail('User not found');
+    return Output.ok(this.toEntity(doc));
+  }
+
+  async findByPasswordResetTokenHash(hash: string): Promise<Output<User>> {
+    const doc = await this.userModel
+      .findOne({ 'passwordResetToken.tokenHash': hash })
+      .exec();
+    if (!doc) return Output.fail('User not found');
+    return Output.ok(this.toEntity(doc));
+  }
+
   async exists(email: Email): Promise<boolean> {
     const count = await this.userModel.countDocuments({ email: email.getValue() }).exec();
     return count > 0;
@@ -82,6 +119,24 @@ export class MongoUserRepository implements IUserRepository {
             tokenHash: doc.emailConfirmationToken.tokenHash,
             expiresAt: doc.emailConfirmationToken.expiresAt,
             createdAt: doc.emailConfirmationToken.createdAt,
+          })
+        : null,
+      refreshTokens: (doc.refreshTokens ?? []).map(rt =>
+        RefreshTokenEntity.reconstitute({
+          id: RefreshTokenId.from(rt._id),
+          tokenHash: rt.tokenHash,
+          family: rt.family,
+          usedAt: rt.usedAt,
+          expiresAt: rt.expiresAt,
+          createdAt: rt.createdAt,
+        }),
+      ),
+      passwordResetToken: doc.passwordResetToken
+        ? PasswordResetTokenEntity.reconstitute({
+            id: PasswordResetTokenId.from(doc.passwordResetToken._id),
+            tokenHash: doc.passwordResetToken.tokenHash,
+            expiresAt: doc.passwordResetToken.expiresAt,
+            createdAt: doc.passwordResetToken.createdAt,
           })
         : null,
       createdAt: doc.createdAt,

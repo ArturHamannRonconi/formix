@@ -3,6 +3,8 @@ import { Password } from '@shared/value-objects/password.vo';
 import { DomainError } from '@shared/domain-error';
 import { UserId } from './value-objects/user-id.vo';
 import { EmailConfirmationTokenEntity } from './entities/email-confirmation-token.entity';
+import { RefreshTokenEntity } from './entities/refresh-token.entity';
+import { PasswordResetTokenEntity } from './entities/password-reset-token.entity';
 
 interface UserProps {
   id: UserId;
@@ -11,11 +13,13 @@ interface UserProps {
   passwordHash: Password;
   emailConfirmed: boolean;
   emailConfirmationToken: EmailConfirmationTokenEntity | null;
+  refreshTokens: RefreshTokenEntity[];
+  passwordResetToken: PasswordResetTokenEntity | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-type CreateUserProps = Omit<UserProps, 'id' | 'emailConfirmed' | 'emailConfirmationToken' | 'createdAt' | 'updatedAt'>;
+type CreateUserProps = Omit<UserProps, 'id' | 'emailConfirmed' | 'emailConfirmationToken' | 'refreshTokens' | 'passwordResetToken' | 'createdAt' | 'updatedAt'>;
 
 export class User {
   private props: UserProps;
@@ -33,6 +37,8 @@ export class User {
       passwordHash: input.passwordHash,
       emailConfirmed: false,
       emailConfirmationToken: null,
+      refreshTokens: [],
+      passwordResetToken: null,
       createdAt: now,
       updatedAt: now,
     });
@@ -58,11 +64,36 @@ export class User {
 
   updatePassword(password: Password): void {
     this.props.passwordHash = password;
+    this.props.passwordResetToken = null;
     this.props.updatedAt = new Date();
   }
 
   setEmailConfirmationToken(token: EmailConfirmationTokenEntity): void {
     this.props.emailConfirmationToken = token;
+    this.props.updatedAt = new Date();
+  }
+
+  addRefreshToken(token: RefreshTokenEntity): void {
+    this.props.refreshTokens.push(token);
+    this.props.updatedAt = new Date();
+  }
+
+  findRefreshTokenByHash(hash: string): RefreshTokenEntity | null {
+    return this.props.refreshTokens.find(t => t.tokenHash === hash) ?? null;
+  }
+
+  invalidateRefreshTokenFamily(family: string): void {
+    this.props.refreshTokens = this.props.refreshTokens.filter(t => t.family !== family);
+    this.props.updatedAt = new Date();
+  }
+
+  invalidateAllRefreshTokens(): void {
+    this.props.refreshTokens = [];
+    this.props.updatedAt = new Date();
+  }
+
+  setPasswordResetToken(token: PasswordResetTokenEntity): void {
+    this.props.passwordResetToken = token;
     this.props.updatedAt = new Date();
   }
 
@@ -88,6 +119,14 @@ export class User {
 
   get emailConfirmationToken(): EmailConfirmationTokenEntity | null {
     return this.props.emailConfirmationToken;
+  }
+
+  get refreshTokens(): RefreshTokenEntity[] {
+    return [...this.props.refreshTokens];
+  }
+
+  get passwordResetToken(): PasswordResetTokenEntity | null {
+    return this.props.passwordResetToken;
   }
 
   get createdAt(): Date {

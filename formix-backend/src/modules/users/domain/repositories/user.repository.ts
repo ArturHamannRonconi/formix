@@ -8,6 +8,8 @@ export interface IUserRepository {
   findById(id: UserId): Promise<Output<User>>;
   findByEmail(email: Email): Promise<Output<User>>;
   findByEmailConfirmationTokenHash(tokenHash: string): Promise<Output<User>>;
+  findByRefreshTokenHash(hash: string): Promise<Output<User>>;
+  findByPasswordResetTokenHash(hash: string): Promise<Output<User>>;
   exists(email: Email): Promise<boolean>;
 }
 

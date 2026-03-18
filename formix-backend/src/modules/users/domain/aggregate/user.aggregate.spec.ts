@@ -38,6 +38,8 @@ describe('User Aggregate', () => {
         passwordHash: password,
         emailConfirmed: true,
         emailConfirmationToken: null,
+        refreshTokens: [],
+        passwordResetToken: null,
         createdAt: now,
         updatedAt: now,
       });
