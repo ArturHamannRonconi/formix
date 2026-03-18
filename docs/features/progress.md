@@ -352,3 +352,16 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/app/(app)/settings/profile/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-019: Listar Membros da Organização — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/organizations/domain/usecases/list-members.usecase.ts`
+  - `formix-backend/src/modules/organizations/domain/usecases/list-members.usecase.spec.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/list-members-response.dto.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.ts`
+  - `formix-backend/src/modules/organizations/infra/controllers/organizations.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/organizations/organizations.module.ts`
+- **Verificação:** typecheck OK, testes OK (3 unit + 4 integration)
