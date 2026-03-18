@@ -81,3 +81,92 @@
   - `formix-backend/src/shared/email/console-email.service.ts` + `console-email.service.spec.ts`
   - `formix-backend/src/shared/email/email.module.ts` (global module, provide EMAIL_SERVICE → ConsoleEmailService)
 - **Verificação:** typecheck OK, testes unitários passando
+
+---
+
+## Fase 2: Autenticação
+
+### Planning da Fase 2
+- **Status:** Concluído
+- **Data:** 2026-03-16
+- **Arquivos criados:**
+  - `docs/features/start/plans/phase-2-authentication/phase-2-authentication.md`
+  - `docs/features/start/plans/phase-2-authentication/us-004-signup.md`
+  - `docs/features/start/plans/phase-2-authentication/us-005-signup-page.md`
+  - `docs/features/start/plans/phase-2-authentication/us-006-confirm-email.md`
+  - `docs/features/start/plans/phase-2-authentication/us-007-confirm-email-page.md`
+  - `docs/features/start/plans/phase-2-authentication/us-008-login.md`
+  - `docs/features/start/plans/phase-2-authentication/us-009-login-page.md`
+  - `docs/features/start/plans/phase-2-authentication/us-010-refresh-token.md`
+  - `docs/features/start/plans/phase-2-authentication/us-011-forgot-password.md`
+  - `docs/features/start/plans/phase-2-authentication/us-012-reset-password.md`
+  - `docs/features/start/plans/phase-2-authentication/us-013-password-pages.md`
+  - `docs/features/start/plans/phase-2-authentication/us-014-jwt-guard.md`
+  - `docs/features/start/plans/phase-2-authentication/us-015-logout.md`
+
+### features/start US-004: Signup Backend
+- **Status:** Concluído
+- **Data:** 2026-03-17
+- **Arquivos criados:**
+  - `formix-backend/src/shared/output.ts` (Output<T> pattern)
+  - `formix-backend/src/modules/users/domain/aggregate/value-objects/user-id.vo.ts`
+  - `formix-backend/src/modules/users/domain/aggregate/value-objects/email-confirmation-token-id.vo.ts`
+  - `formix-backend/src/modules/users/domain/aggregate/entities/email-confirmation-token.entity.ts` + `.spec.ts`
+  - `formix-backend/src/modules/users/domain/aggregate/user.aggregate.ts` + `.spec.ts`
+  - `formix-backend/src/modules/users/domain/repositories/user.repository.ts`
+  - `formix-backend/src/modules/users/infra/schemas/user.schema.ts` (com EmailConfirmationTokenSubSchema embutido)
+  - `formix-backend/src/modules/users/infra/repositories/mongo-user.repository.ts` + `.test.ts`
+  - `formix-backend/src/modules/organizations/domain/aggregate/value-objects/organization-id.vo.ts`
+  - `formix-backend/src/modules/organizations/domain/aggregate/value-objects/membership-id.vo.ts`
+  - `formix-backend/src/modules/organizations/domain/aggregate/entities/membership.entity.ts` + `.spec.ts`
+  - `formix-backend/src/modules/organizations/domain/aggregate/organization.aggregate.ts` + `.spec.ts`
+  - `formix-backend/src/modules/organizations/domain/repositories/organization.repository.ts`
+  - `formix-backend/src/modules/organizations/infra/schemas/organization.schema.ts` (com MembershipSubSchema embutido)
+  - `formix-backend/src/modules/organizations/infra/repositories/mongo-organization.repository.ts` + `.test.ts`
+  - `formix-backend/src/modules/auth/domain/usecases/signup.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` + `.test.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/signup.dto.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/signup-response.dto.ts`
+  - `formix-backend/src/modules/auth/auth.module.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/app.module.ts` (importar AuthModule)
+  - `formix-backend/src/core/environment/environment.config.ts` (JWT_ACCESS_SECRET, JWT_ACCESS_EXPIRES_IN, EMAIL_CONFIRMATION_EXPIRES_IN, APP_URL)
+  - `formix-backend/.env` + `.env.example` (novas variáveis JWT e confirmação de email)
+  - `formix-backend/src/core/environment/environment.config.spec.ts` (atualizar testes com novas vars)
+  - `docs/code-patterns/backend-patterns.md` (reescrito com padrões: Aggregate, IDValueObject, Output, Repository)
+  - `formix-backend/CLAUDE.md` (adicionados padrões de código obrigatórios)
+- **Pacotes instalados:** `@nestjs/jwt`, `@nestjs/swagger`
+- **Nota:** EmailConfirmationToken embutido no UserAggregate (sem coleção separada). Membership embutido no OrganizationAggregate (sem coleção separada). Auth module sem repositórios próprios.
+
+### features/start US-005: Tela de Signup
+- **Status:** Pendente
+
+### features/start US-006: Confirmação de Email
+- **Status:** Pendente
+
+### features/start US-007: Tela de Confirmação de Email
+- **Status:** Pendente
+
+### features/start US-008: Login
+- **Status:** Pendente
+
+### features/start US-009: Tela de Login
+- **Status:** Pendente
+
+### features/start US-010: Refresh Token
+- **Status:** Pendente
+
+### features/start US-011: Reset de Senha — Solicitar
+- **Status:** Pendente
+
+### features/start US-012: Reset de Senha — Confirmar
+- **Status:** Pendente
+
+### features/start US-013: Telas de Reset de Senha
+- **Status:** Pendente
+
+### features/start US-014: Middleware de Autenticação (JWT Guard)
+- **Status:** Pendente
+
+### features/start US-015: Logout
+- **Status:** Pendente
