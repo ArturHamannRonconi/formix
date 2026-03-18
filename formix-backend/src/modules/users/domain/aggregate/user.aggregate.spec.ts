@@ -1,9 +1,11 @@
-import { User } from './user.entity';
+import { User } from './user.aggregate';
 import { Email } from '@shared/value-objects/email.vo';
 import { Password } from '@shared/value-objects/password.vo';
 import { DomainError } from '@shared/domain-error';
+import { UserId } from './value-objects/user-id.vo';
+import { EmailConfirmationTokenEntity } from './entities/email-confirmation-token.entity';
 
-describe('User Entity', () => {
+describe('User Aggregate', () => {
   let email: Email;
   let password: Password;
 
@@ -13,13 +15,14 @@ describe('User Entity', () => {
   });
 
   describe('create()', () => {
-    it('should create a user with emailConfirmed=false and timestamps', () => {
+    it('should create a user with emailConfirmed=false and no token', () => {
       const user = User.create({ name: 'John Doe', email, passwordHash: password });
 
-      expect(user.id).toBeDefined();
+      expect(user.id).toBeInstanceOf(UserId);
       expect(user.name).toBe('John Doe');
       expect(user.email.getValue()).toBe('user@example.com');
       expect(user.emailConfirmed).toBe(false);
+      expect(user.emailConfirmationToken).toBeNull();
       expect(user.createdAt).toBeInstanceOf(Date);
       expect(user.updatedAt).toBeInstanceOf(Date);
     });
@@ -29,26 +32,41 @@ describe('User Entity', () => {
     it('should reconstitute a user from stored data', () => {
       const now = new Date();
       const user = User.reconstitute({
-        id: 'some-id',
+        id: UserId.from('some-id'),
         name: 'Jane Doe',
         email,
         passwordHash: password,
         emailConfirmed: true,
+        emailConfirmationToken: null,
         createdAt: now,
         updatedAt: now,
       });
 
-      expect(user.id).toBe('some-id');
+      expect(user.id.getValue()).toBe('some-id');
       expect(user.emailConfirmed).toBe(true);
     });
   });
 
-  describe('confirmEmail()', () => {
-    it('should set emailConfirmed to true', () => {
+  describe('setEmailConfirmationToken()', () => {
+    it('should set the email confirmation token', () => {
       const user = User.create({ name: 'John', email, passwordHash: password });
-      expect(user.emailConfirmed).toBe(false);
+      const token = EmailConfirmationTokenEntity.create(86400000);
+
+      user.setEmailConfirmationToken(token);
+
+      expect(user.emailConfirmationToken).toBe(token);
+    });
+  });
+
+  describe('confirmEmail()', () => {
+    it('should set emailConfirmed to true and clear the token', () => {
+      const user = User.create({ name: 'John', email, passwordHash: password });
+      user.setEmailConfirmationToken(EmailConfirmationTokenEntity.create(86400000));
+
       user.confirmEmail();
+
       expect(user.emailConfirmed).toBe(true);
+      expect(user.emailConfirmationToken).toBeNull();
     });
   });
 

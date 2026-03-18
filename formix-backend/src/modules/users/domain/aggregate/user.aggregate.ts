@@ -1,19 +1,21 @@
-import { randomUUID } from 'crypto';
 import { Email } from '@shared/value-objects/email.vo';
 import { Password } from '@shared/value-objects/password.vo';
 import { DomainError } from '@shared/domain-error';
+import { UserId } from './value-objects/user-id.vo';
+import { EmailConfirmationTokenEntity } from './entities/email-confirmation-token.entity';
 
 interface UserProps {
-  id: string;
+  id: UserId;
   name: string;
   email: Email;
   passwordHash: Password;
   emailConfirmed: boolean;
+  emailConfirmationToken: EmailConfirmationTokenEntity | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-type CreateUserProps = Omit<UserProps, 'id' | 'emailConfirmed' | 'createdAt' | 'updatedAt'>;
+type CreateUserProps = Omit<UserProps, 'id' | 'emailConfirmed' | 'emailConfirmationToken' | 'createdAt' | 'updatedAt'>;
 
 export class User {
   private props: UserProps;
@@ -25,11 +27,12 @@ export class User {
   static create(input: CreateUserProps): User {
     const now = new Date();
     return new User({
-      id: randomUUID(),
+      id: UserId.create(),
       name: input.name,
       email: input.email,
       passwordHash: input.passwordHash,
       emailConfirmed: false,
+      emailConfirmationToken: null,
       createdAt: now,
       updatedAt: now,
     });
@@ -41,6 +44,7 @@ export class User {
 
   confirmEmail(): void {
     this.props.emailConfirmed = true;
+    this.props.emailConfirmationToken = null;
     this.props.updatedAt = new Date();
   }
 
@@ -57,7 +61,12 @@ export class User {
     this.props.updatedAt = new Date();
   }
 
-  get id(): string {
+  setEmailConfirmationToken(token: EmailConfirmationTokenEntity): void {
+    this.props.emailConfirmationToken = token;
+    this.props.updatedAt = new Date();
+  }
+
+  get id(): UserId {
     return this.props.id;
   }
 
@@ -75,6 +84,10 @@ export class User {
 
   get emailConfirmed(): boolean {
     return this.props.emailConfirmed;
+  }
+
+  get emailConfirmationToken(): EmailConfirmationTokenEntity | null {
+    return this.props.emailConfirmationToken;
   }
 
   get createdAt(): Date {
