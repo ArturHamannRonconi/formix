@@ -31,7 +31,8 @@
       "Bash(/home/arturronconi/personal-projects/formix/formix-backend/.env.example:*)",
       "Bash(xargs rmdir:*)",
       "Bash(find /home/arturronconi/personal-projects/formix -name *.md -path */.claude/skills/*)",
-      "Read(//home/arturronconi/.claude/**)"
+      "Read(//home/arturronconi/.claude/**)",
+      "Bash(gh pr:*)"
     ]
   }
 }

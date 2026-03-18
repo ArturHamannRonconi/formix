@@ -139,34 +139,126 @@
 - **Nota:** EmailConfirmationToken embutido no UserAggregate (sem coleção separada). Membership embutido no OrganizationAggregate (sem coleção separada). Auth module sem repositórios próprios.
 
 ### features/start US-005: Tela de Signup
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/services/auth/auth.types.ts`
+  - `formix-frontend/src/services/auth/auth.service.ts` (função `signup`)
+  - `formix-frontend/src/app/signup/page.tsx`
 
 ### features/start US-006: Confirmação de Email
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/auth/domain/usecases/confirm-email.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/domain/usecases/resend-confirmation.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/confirm-email.dto.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/resend-confirmation.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/confirm-email, POST /auth/resend-confirmation)
+  - `formix-backend/src/modules/auth/auth.module.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.test.ts`
 
 ### features/start US-007: Tela de Confirmação de Email
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/app/confirm-email/page.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/auth/auth.service.ts` (funções `confirmEmail`, `resendConfirmation`)
 
 ### features/start US-008: Login
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/users/domain/aggregate/value-objects/refresh-token-id.vo.ts`
+  - `formix-backend/src/modules/users/domain/aggregate/entities/refresh-token.entity.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/domain/usecases/login.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/login.dto.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/login-response.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/users/domain/aggregate/user.aggregate.ts` (refreshTokens, addRefreshToken, findRefreshTokenByHash, invalidateRefreshTokenFamily, invalidateAllRefreshTokens)
+  - `formix-backend/src/modules/users/infra/schemas/user.schema.ts` (RefreshTokenSubSchema)
+  - `formix-backend/src/modules/users/domain/repositories/user.repository.ts` (findByRefreshTokenHash)
+  - `formix-backend/src/modules/users/infra/repositories/mongo-user.repository.ts` + `.test.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/login)
+  - `formix-backend/src/modules/auth/auth.module.ts`
 
 ### features/start US-009: Tela de Login
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/app/login/page.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/auth/auth.service.ts` (função `login`)
+  - `formix-frontend/src/services/auth/auth.types.ts` (LoginResponse)
 
 ### features/start US-010: Refresh Token
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/auth/domain/usecases/refresh-token.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/refresh-token.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/refresh)
+  - `formix-backend/src/modules/auth/auth.module.ts`
 
 ### features/start US-011: Reset de Senha — Solicitar
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/users/domain/aggregate/value-objects/password-reset-token-id.vo.ts`
+  - `formix-backend/src/modules/users/domain/aggregate/entities/password-reset-token.entity.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/domain/usecases/forgot-password.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/forgot-password.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/users/domain/aggregate/user.aggregate.ts` (passwordResetToken, setPasswordResetToken, clearPasswordResetToken)
+  - `formix-backend/src/modules/users/infra/schemas/user.schema.ts` (PasswordResetTokenSubSchema)
+  - `formix-backend/src/modules/users/domain/repositories/user.repository.ts` (findByPasswordResetTokenHash)
+  - `formix-backend/src/modules/users/infra/repositories/mongo-user.repository.ts` + `.test.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/forgot-password)
+  - `formix-backend/src/modules/auth/auth.module.ts`
 
 ### features/start US-012: Reset de Senha — Confirmar
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/auth/domain/usecases/reset-password.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/reset-password.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/reset-password)
+  - `formix-backend/src/modules/auth/auth.module.ts`
 
 ### features/start US-013: Telas de Reset de Senha
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/app/forgot-password/page.tsx`
+  - `formix-frontend/src/app/reset-password/page.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/auth/auth.service.ts` (funções `forgotPassword`, `resetPassword`)
 
 ### features/start US-014: Middleware de Autenticação (JWT Guard)
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Pacotes instalados:** `@nestjs/passport`, `passport`, `passport-jwt`, `@types/passport-jwt`
+- **Arquivos criados:**
+  - `formix-backend/src/modules/auth/infra/decorators/public.decorator.ts`
+  - `formix-backend/src/modules/auth/infra/decorators/current-user.decorator.ts`
+  - `formix-backend/src/modules/auth/infra/strategies/jwt.strategy.ts`
+  - `formix-backend/src/modules/auth/infra/guards/jwt-auth.guard.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/auth/auth.module.ts` (PassportModule, JwtStrategy, JwtAuthGuard)
+  - `formix-backend/src/app.module.ts` (APP_GUARD global)
+  - `formix-backend/src/core/environment/environment.config.ts` (JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRES_IN, PASSWORD_RESET_EXPIRES_IN)
 
 ### features/start US-015: Logout
-- **Status:** Pendente
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/auth/domain/usecases/logout.usecase.ts` + `.spec.ts`
+  - `formix-backend/src/modules/auth/infra/controllers/logout.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/logout)
+  - `formix-backend/src/modules/auth/auth.module.ts`
+- **Verificação final:** typecheck OK (backend + frontend), 97 testes unitários OK, 29 testes de integração OK, build frontend OK
