@@ -342,3 +342,13 @@
 - **Arquivos modificados:**
   - `formix-backend/src/modules/users/users.module.ts`
 - **Verificação:** typecheck OK, testes OK (8 unit + 6 integration)
+
+### features/start US-018: Perfil do Usuário — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/services/users/users.types.ts`
+  - `formix-frontend/src/services/users/users.service.ts`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/profile/page.tsx`
+- **Verificação:** typecheck OK, build OK
