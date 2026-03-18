@@ -1,16 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { PageContainer } from '@/components/Layout';
 import { TextInput } from '@/components/inputs/TextInput';
 import { getProfile, updateProfile } from '@/services/users/users.service';
 import { ApiError } from '@/types/api-error';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { UserProfile } from '@/services/users/users.types';
-
-interface Toast {
-  type: 'success' | 'error';
-  message: string;
-}
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -20,7 +19,6 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nameLoading, setNameLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [toast, setToast] = useState<Toast | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,11 +28,6 @@ export default function ProfilePage() {
     });
   }, []);
 
-  function showToast(type: 'success' | 'error', message: string) {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 4000);
-  }
-
   async function handleSaveName(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
@@ -42,10 +35,10 @@ export default function ProfilePage() {
     try {
       await updateProfile({ name: name.trim() });
       setProfile((prev) => prev ? { ...prev, name: name.trim() } : prev);
-      showToast('success', 'Nome atualizado com sucesso.');
+      toast.success('Nome atualizado com sucesso.');
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Erro ao atualizar nome.';
-      showToast('error', message);
+      toast.error(message);
     } finally {
       setNameLoading(false);
     }
@@ -64,12 +57,12 @@ export default function ProfilePage() {
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      showToast('success', 'Senha alterada com sucesso.');
+      toast.success('Senha alterada com sucesso.');
     } catch (err) {
       if (err instanceof ApiError && err.statusCode === 400) {
-        showToast('error', 'Senha atual incorreta.');
+        toast.error('Senha atual incorreta.');
       } else {
-        showToast('error', 'Erro ao alterar senha.');
+        toast.error('Erro ao alterar senha.');
       }
     } finally {
       setPasswordLoading(false);
@@ -78,89 +71,83 @@ export default function ProfilePage() {
 
   return (
     <PageContainer>
-      <h1>Perfil</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Perfil</h1>
 
-      {toast && (
-        <div
-          role="alert"
-          style={{
-            padding: '12px 16px',
-            marginBottom: 24,
-            borderRadius: 6,
-            background: toast.type === 'success' ? '#d1fae5' : '#fee2e2',
-            color: toast.type === 'success' ? '#065f46' : '#991b1b',
-            border: `1px solid ${toast.type === 'success' ? '#6ee7b7' : '#fca5a5'}`,
-          }}
-        >
-          {toast.message}
-        </div>
-      )}
+      <div className="space-y-6 max-w-xl">
+        <Card>
+          <CardHeader>
+            <CardTitle>Dados pessoais</CardTitle>
+            <CardDescription>Atualize seu nome de exibição</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!profile ? (
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-9 w-24" />
+              </div>
+            ) : (
+              <form onSubmit={handleSaveName} noValidate className="space-y-4">
+                <TextInput
+                  label="Nome"
+                  value={name}
+                  onChange={setName}
+                  required
+                  disabled={nameLoading}
+                />
+                <TextInput
+                  label="Email"
+                  value={profile.email ?? ''}
+                  onChange={() => {}}
+                  disabled
+                />
+                <Button type="submit" disabled={nameLoading} className="bg-violet-600 hover:bg-violet-700">
+                  {nameLoading ? 'Salvando...' : 'Salvar'}
+                </Button>
+              </form>
+            )}
+          </CardContent>
+        </Card>
 
-      <section style={{ marginBottom: 40, maxWidth: 480 }}>
-        <h2>Dados pessoais</h2>
-        <form onSubmit={handleSaveName} noValidate>
-          <div style={{ marginBottom: 16 }}>
-            <TextInput
-              label="Nome"
-              value={name}
-              onChange={setName}
-              required
-              disabled={nameLoading || !profile}
-            />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <TextInput
-              label="Email"
-              value={profile?.email ?? ''}
-              onChange={() => {}}
-              disabled
-            />
-          </div>
-          <button type="submit" disabled={nameLoading || !profile}>
-            {nameLoading ? 'Salvando...' : 'Salvar'}
-          </button>
-        </form>
-      </section>
-
-      <section style={{ maxWidth: 480 }}>
-        <h2>Alterar senha</h2>
-        <form onSubmit={handleChangePassword} noValidate>
-          <div style={{ marginBottom: 16 }}>
-            <TextInput
-              label="Senha atual"
-              value={currentPassword}
-              onChange={setCurrentPassword}
-              type="password"
-              required
-              disabled={passwordLoading}
-            />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <TextInput
-              label="Nova senha"
-              value={newPassword}
-              onChange={setNewPassword}
-              type="password"
-              required
-              disabled={passwordLoading}
-            />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <TextInput
-              label="Confirmar nova senha"
-              value={confirmPassword}
-              onChange={setConfirmPassword}
-              type="password"
-              required
-              disabled={passwordLoading}
-              error={passwordError ?? undefined}
-            />
-          </div>
-          <button type="submit" disabled={passwordLoading}>
-            {passwordLoading ? 'Alterando...' : 'Alterar senha'}
-          </button>
-        </form>
-      </section>
+        <Card>
+          <CardHeader>
+            <CardTitle>Alterar senha</CardTitle>
+            <CardDescription>Crie uma nova senha segura</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleChangePassword} noValidate className="space-y-4">
+              <TextInput
+                label="Senha atual"
+                value={currentPassword}
+                onChange={setCurrentPassword}
+                type="password"
+                required
+                disabled={passwordLoading}
+              />
+              <TextInput
+                label="Nova senha"
+                value={newPassword}
+                onChange={setNewPassword}
+                type="password"
+                required
+                disabled={passwordLoading}
+              />
+              <TextInput
+                label="Confirmar nova senha"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+                type="password"
+                required
+                disabled={passwordLoading}
+                error={passwordError ?? undefined}
+              />
+              <Button type="submit" disabled={passwordLoading} className="bg-violet-600 hover:bg-violet-700">
+                {passwordLoading ? 'Alterando...' : 'Alterar senha'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </PageContainer>
   );
 }

@@ -1,18 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { PageContainer } from '@/components/Layout';
 import { MembersTable } from '@/modules/MembersTable/MembersTable';
 import { RemoveMemberModal } from '@/modules/MembersTable/RemoveMemberModal';
 import { listMembers, removeMember } from '@/services/organizations/organizations.service';
 import { useAuth } from '@/hooks/useAuth';
 import { ApiError } from '@/types/api-error';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import type { Member } from '@/services/organizations/organizations.types';
-
-interface Toast {
-  type: 'success' | 'error';
-  message: string;
-}
 
 export default function MembersPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -20,12 +18,6 @@ export default function MembersPage() {
   const [loading, setLoading] = useState(true);
   const [memberToRemove, setMemberToRemove] = useState<Member | null>(null);
   const [removeLoading, setRemoveLoading] = useState(false);
-  const [toast, setToast] = useState<Toast | null>(null);
-
-  function showToast(type: 'success' | 'error', message: string) {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 4000);
-  }
 
   async function fetchMembers() {
     if (!user) return;
@@ -50,13 +42,13 @@ export default function MembersPage() {
     try {
       await removeMember(user.organizationId, memberToRemove.userId);
       setMemberToRemove(null);
-      showToast('success', `${memberToRemove.name} foi removido da organização.`);
+      toast.success(`${memberToRemove.name} foi removido da organização.`);
       await fetchMembers();
     } catch (err) {
       if (err instanceof ApiError && err.statusCode === 400) {
-        showToast('error', 'Não é possível remover o único admin da organização.');
+        toast.error('Não é possível remover o único admin da organização.');
       } else {
-        showToast('error', 'Erro ao remover membro.');
+        toast.error('Erro ao remover membro.');
       }
     } finally {
       setRemoveLoading(false);
@@ -66,40 +58,32 @@ export default function MembersPage() {
   if (authLoading || loading) {
     return (
       <PageContainer>
-        <p>Carregando membros...</p>
+        <div className="flex items-center justify-between mb-6">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-9 w-36" />
+        </div>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
       </PageContainer>
     );
   }
 
   return (
     <PageContainer>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>Membros</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">Membros</h1>
         {user?.role === 'admin' && (
-          <button disabled style={{ opacity: 0.5 }}>
+          <Button disabled variant="outline">
             Convidar membro
-          </button>
+          </Button>
         )}
       </div>
 
-      {toast && (
-        <div
-          role="alert"
-          style={{
-            padding: '12px 16px',
-            marginBottom: 24,
-            borderRadius: 6,
-            background: toast.type === 'success' ? '#d1fae5' : '#fee2e2',
-            color: toast.type === 'success' ? '#065f46' : '#991b1b',
-            border: `1px solid ${toast.type === 'success' ? '#6ee7b7' : '#fca5a5'}`,
-          }}
-        >
-          {toast.message}
-        </div>
-      )}
-
       {members.length === 0 ? (
-        <p>Nenhum membro encontrado.</p>
+        <p className="text-muted-foreground">Nenhum membro encontrado.</p>
       ) : (
         <MembersTable
           members={members}

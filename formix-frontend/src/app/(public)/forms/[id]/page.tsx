@@ -1,16 +1,16 @@
 import { PageContainer } from '@/components/Layout';
 
 interface PublicFormPageProps {
-  params: Promise<{ publicToken: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function PublicFormPage({ params }: PublicFormPageProps) {
-  const { publicToken } = await params;
+  const { id } = await params;
 
   return (
     <PageContainer>
       <h1>Formulário público</h1>
-      <p>Token: {publicToken} — Conteúdo em breve (US-040).</p>
+      <p>Token: {id} — Conteúdo em breve (US-040).</p>
     </PageContainer>
   );
 }

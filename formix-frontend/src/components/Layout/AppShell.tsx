@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import styles from './AppShell.module.css';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -16,8 +15,11 @@ export function AppShell({ children, orgName, userName, onLogout }: AppShellProp
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className={styles.shell}>
-      <a href="#main-content" className={styles.skipLink}>
+    <div className="flex flex-col min-h-screen">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
+      >
         Pular para conteúdo
       </a>
       <Header
@@ -26,11 +28,9 @@ export function AppShell({ children, orgName, userName, onLogout }: AppShellProp
         onMenuClick={() => setSidebarOpen(true)}
         onLogout={onLogout}
       />
-      <div className={styles.body}>
-        <div className={styles.sidebar}>
-          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        </div>
-        <main id="main-content" className={styles.main}>
+      <div className="flex flex-1">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main id="main-content" className="flex-1 min-w-0">
           {children}
         </main>
       </div>

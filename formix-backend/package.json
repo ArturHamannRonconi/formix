@@ -4,6 +4,7 @@
   "description": "API backend do Formix, construída com NestJS e MongoDB seguindo DDD simplificado.",
   "main": "index.js",
   "scripts": {
+    "predev": "npm run db:up",
     "dev": "ts-node -r tsconfig-paths/register src/main.ts",
     "build": "nest build",
     "start": "node dist/main",
@@ -16,9 +17,9 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "db:up": "docker-compose -f ../docker-compose.yml up -d",
-    "db:down": "docker-compose -f ../docker-compose.yml down",
-    "db:logs": "docker-compose -f ../docker-compose.yml logs -f mongodb"
+    "db:up": "docker compose -f ../docker-compose.yml up -d",
+    "db:down": "docker compose -f ../docker-compose.yml down",
+    "db:logs": "docker compose -f ../docker-compose.yml logs -f mongodb"
   },
   "keywords": [],
   "author": "",

@@ -32,7 +32,24 @@
       "Bash(xargs rmdir:*)",
       "Bash(find /home/arturronconi/personal-projects/formix -name *.md -path */.claude/skills/*)",
       "Read(//home/arturronconi/.claude/**)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(mkdir -p \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(app\\)/forms/[id]/edit\")",
+      "Bash(mkdir -p \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(app\\)/forms/[id]/responses\")",
+      "Bash(mkdir -p \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(app\\)/forms/[id]/analytics\")",
+      "Bash(/home/arturronconi/personal-projects/formix/docs/features/progress.md:*)",
+      "Bash(find:*)",
+      "Bash(curl -s -X POST http://localhost:3001/auth/signup -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"Artur Ronconi\"\"\"\",\"\"\"\"email\"\"\"\":\"\"\"\"artur@formix.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"Formix123\"\"\"\",\"\"\"\"organizationName\"\"\"\":\"\"\"\"Formix\"\"\"\"}')",
+      "Bash(ls:*)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(auth\\\\\\)/forgot-password/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(auth\\\\\\)/confirm-email/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(auth\\\\\\)/check-email/)",
+      "Bash(npx shadcn@latest init --yes)",
+      "Bash(npx shadcn@latest add button input label card badge table dialog avatar separator skeleton --yes)",
+      "Bash(npx shadcn@latest add button input label card badge table dialog avatar separator skeleton --yes --base-color slate)",
+      "Bash(mongosh:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker exec:*)",
+      "Bash(ls formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/)"
     ]
   }
 }

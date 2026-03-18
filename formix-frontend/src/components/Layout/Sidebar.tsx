@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from './Sidebar.module.css';
+import { LayoutList, Users, Settings, X } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,9 +10,9 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { href: '/forms', label: 'Formulários' },
-  { href: '/settings/members', label: 'Membros' },
-  { href: '/settings/profile', label: 'Configurações' },
+  { href: '/forms', label: 'Formulários', icon: LayoutList },
+  { href: '/settings/members', label: 'Membros', icon: Users },
+  { href: '/settings/profile', label: 'Configurações', icon: Settings },
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
@@ -22,34 +22,49 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     <>
       {isOpen && (
         <div
-          className={styles.overlay}
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
       <nav
-        className={`${styles.sidebar}${isOpen ? ` ${styles.sidebarOpen}` : ''}`}
+        className={`
+          fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 text-slate-100 flex flex-col
+          transform transition-transform duration-200 ease-in-out
+          md:relative md:translate-x-0 md:z-auto md:flex md:min-h-0
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
         aria-label="Navegação principal"
       >
-        <button
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Fechar menu"
-        >
-          ✕ Fechar
-        </button>
-        <div className={styles.logo}>Formix</div>
-        <ul className={styles.nav} role="list">
-          {navItems.map(({ href, label }) => {
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+          <span className="text-xl font-bold text-white tracking-tight">Formix</span>
+          <button
+            className="md:hidden p-1 rounded hover:bg-slate-800 transition-colors"
+            onClick={onClose}
+            aria-label="Fechar menu"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+
+        <ul className="flex-1 px-3 py-4 space-y-1" role="list">
+          {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || pathname.startsWith(href + '/');
             return (
               <li key={href}>
                 <Link
                   href={href}
-                  className={`${styles.navLink}${isActive ? ` ${styles.navLinkActive}` : ''}`}
+                  className={`
+                    flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors
+                    ${isActive
+                      ? 'bg-violet-600/20 text-violet-300'
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+                    }
+                  `}
                   aria-current={isActive ? 'page' : undefined}
                   onClick={onClose}
                 >
+                  <Icon className="size-4 shrink-0" />
                   {label}
                 </Link>
               </li>

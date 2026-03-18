@@ -1,6 +1,8 @@
 import { useId } from 'react';
 import type { BaseInputProps } from '@/types/input.types';
-import styles from './TextInput.module.css';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface TextInputProps extends BaseInputProps {
   value: string;
@@ -22,12 +24,12 @@ export function TextInput({
   const id = useId();
 
   return (
-    <div className={styles.wrapper}>
-      <label htmlFor={id} className={styles.label}>
+    <div className="space-y-2">
+      <Label htmlFor={id}>
         {label}
-        {required && <span className={styles.required} aria-hidden="true">*</span>}
-      </label>
-      <input
+        {required && <span className="text-destructive ml-1" aria-hidden="true">*</span>}
+      </Label>
+      <Input
         id={id}
         type={type}
         value={value}
@@ -37,10 +39,10 @@ export function TextInput({
         required={required}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`${styles.input}${error ? ` ${styles.inputError}` : ''}`}
+        className={cn(error && 'border-destructive focus-visible:ring-destructive/20')}
       />
       {error && (
-        <span id={`${id}-error`} className={styles.errorMsg} role="alert">
+        <span id={`${id}-error`} className="text-sm text-destructive" role="alert">
           {error}
         </span>
       )}
