@@ -6,6 +6,10 @@ import Link from 'next/link';
 import { login } from '@/services/auth/auth.service';
 import { setAccessToken, setRefreshToken } from '@/services/auth-token';
 import { ApiError } from '@/types/api-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,39 +58,64 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{ maxWidth: 400, margin: '80px auto', padding: '0 16px' }}>
-      <h1>Entrar</h1>
-      <form onSubmit={handleSubmit} noValidate>
-        <div style={{ marginBottom: 16 }}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-            style={{ display: 'block', width: '100%', marginTop: 4 }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label htmlFor="password">Senha</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading}
-            style={{ display: 'block', width: '100%', marginTop: 4 }}
-          />
-        </div>
-        {error && <p style={{ color: 'red', marginBottom: 16 }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ width: '100%' }}>
-          {loading ? 'Entrando...' : 'Entrar'}
-        </button>
-      </form>
-      <p style={{ marginTop: 16 }}>
-        <Link href="/forgot-password">Esqueci a senha</Link>
-      </p>
-    </main>
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <div className="mb-2 text-2xl font-bold text-violet-600">Formix</div>
+        <CardTitle className="text-2xl">Entrar</CardTitle>
+        <CardDescription>Acesse sua conta para continuar</CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              placeholder="seu@email.com"
+              autoComplete="email"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Senha</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+              placeholder="••••••••"
+              autoComplete="current-password"
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+
+          <Button type="submit" disabled={loading} className="w-full bg-violet-600 hover:bg-violet-700">
+            {loading ? 'Entrando...' : 'Entrar'}
+          </Button>
+        </form>
+      </CardContent>
+
+      <CardFooter className="flex flex-col gap-2 text-center text-sm text-muted-foreground">
+        <Link href="/forgot-password" className="text-violet-600 hover:underline">
+          Esqueci a senha
+        </Link>
+        <p>
+          Não tem uma conta?{' '}
+          <Link href="/signup" className="text-violet-600 hover:underline font-medium">
+            Criar conta
+          </Link>
+        </p>
+      </CardFooter>
+    </Card>
   );
 }

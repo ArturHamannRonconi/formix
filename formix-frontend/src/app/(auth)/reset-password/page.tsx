@@ -5,6 +5,10 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { resetPassword } from '@/services/auth/auth.service';
 import { ApiError } from '@/types/api-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -61,59 +65,83 @@ function ResetPasswordContent() {
 
   if (success) {
     return (
-      <>
-        <p>Senha redefinida com sucesso! Redirecionando para o login...</p>
-        <Link href="/login">Ir para o login agora</Link>
-      </>
+      <div className="text-center space-y-3">
+        <p className="text-sm text-muted-foreground">
+          Senha redefinida com sucesso! Redirecionando para o login...
+        </p>
+        <Link href="/login" className="text-violet-600 hover:underline text-sm font-medium">
+          Ir para o login agora
+        </Link>
+      </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <div style={{ marginBottom: 16 }}>
-        <label htmlFor="newPassword">Nova senha</label>
-        <input
+    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="newPassword">Nova senha</Label>
+        <Input
           id="newPassword"
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           disabled={loading}
-          style={{ display: 'block', width: '100%', marginTop: 4 }}
+          placeholder="••••••••"
+          autoComplete="new-password"
         />
       </div>
-      <div style={{ marginBottom: 16 }}>
-        <label htmlFor="confirmPassword">Confirmar nova senha</label>
-        <input
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword">Confirmar nova senha</Label>
+        <Input
           id="confirmPassword"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           disabled={loading}
-          style={{ display: 'block', width: '100%', marginTop: 4 }}
+          placeholder="••••••••"
+          autoComplete="new-password"
         />
       </div>
+
       {error && (
-        <p style={{ color: 'red', marginBottom: 16 }}>
+        <p className="text-sm text-destructive" role="alert">
           {error}{' '}
           {(error.includes('inválido') || error.includes('expirado')) && (
-            <Link href="/forgot-password">Solicitar novo link</Link>
+            <Link href="/forgot-password" className="underline">
+              Solicitar novo link
+            </Link>
           )}
         </p>
       )}
-      <button type="submit" disabled={loading} style={{ width: '100%' }}>
+
+      <Button type="submit" disabled={loading} className="w-full bg-violet-600 hover:bg-violet-700">
         {loading ? 'Redefinindo...' : 'Redefinir senha'}
-      </button>
+      </Button>
     </form>
   );
 }
 
 export default function ResetPasswordPage() {
   return (
-    <main style={{ maxWidth: 400, margin: '80px auto', padding: '0 16px' }}>
-      <h1>Redefinir senha</h1>
-      <Suspense fallback={<p>Carregando...</p>}>
-        <ResetPasswordContent />
-      </Suspense>
-    </main>
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <div className="mb-2 text-2xl font-bold text-violet-600">Formix</div>
+        <CardTitle className="text-2xl">Redefinir senha</CardTitle>
+        <CardDescription>Crie uma nova senha para sua conta</CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Carregando...</p>}>
+          <ResetPasswordContent />
+        </Suspense>
+      </CardContent>
+
+      <CardFooter className="justify-center text-sm">
+        <Link href="/login" className="text-violet-600 hover:underline">
+          Voltar para o login
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
