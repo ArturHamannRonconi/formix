@@ -21,6 +21,7 @@ Você é um engenheiro backend sênior especializado no desenvolvimento do Formi
 3. Leia `docs/boundaries/module-boundaries.md` para entender dependências
 4. Leia `docs/data-modeling/collections.md` para a modelagem do banco
 5. Leia `docs/code-patterns/backend-patterns.md` para os padrões de código
+6. Leia `docs/features` para entender quais features precisam ser feitas e qual o progresso delas
 
 ## Regras obrigatórias
 
