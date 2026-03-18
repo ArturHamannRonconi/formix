@@ -1,4 +1,4 @@
-import styles from './PageContainer.module.css';
+import { cn } from '@/lib/utils';
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface PageContainerProps {
 
 export function PageContainer({ children, className }: PageContainerProps) {
   return (
-    <div className={`${styles.container}${className ? ` ${className}` : ''}`}>
+    <div className={cn('p-6 md:p-8 max-w-7xl mx-auto w-full', className)}>
       {children}
     </div>
   );
