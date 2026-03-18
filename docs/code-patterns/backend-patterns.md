@@ -1,271 +1,325 @@
 # Padrões de Código — Backend
 
-## Estrutura de um usecase
+## Aggregate
+
+1 aggregate por módulo = 1 coleção MongoDB. Encapsula toda consistência interna do módulo.
 
 ```typescript
-// domain/usecases/create-form.usecase.ts
-export class CreateFormUseCase {
-  constructor(
-    private readonly formRepository: IFormRepository,
-  ) {}
+// domain/aggregate/user.aggregate.ts
+export class User {
+  private constructor(private props: UserProps) {}
 
-  async execute(input: CreateFormInput): Promise<Form> {
-    // 1. Validar regras de negócio
-    // 2. Criar entidade/aggregate
-    // 3. Persistir via repositório
-    // 4. Retornar resultado
+  static create(input: CreateUserInput): User {
+    return new User({ id: UserId.create(), ...input, createdAt: new Date(), updatedAt: new Date() });
   }
+
+  static reconstitute(props: UserProps): User { return new User(props); }
+
+  addRefreshToken(token: RefreshTokenEntity): void {
+    this.props.refreshTokens.push(token);
+    this.props.updatedAt = new Date();
+  }
+
+  findRefreshTokenByHash(hash: string): RefreshTokenEntity | null {
+    return this.props.refreshTokens.find(t => t.tokenHash === hash) ?? null;
+  }
+
+  get id(): UserId { return this.props.id; }
+  get refreshTokens(): RefreshTokenEntity[] { return [...this.props.refreshTokens]; }
 }
 ```
 
 **Regras:**
-- Um arquivo por usecase
-- Nome no formato: `verbo-substantivo.usecase.ts`
-- Recebe dependências via construtor (DI do NestJS)
-- Método `execute()` como ponto de entrada
-- Retorna entidade de domínio, não DTO
+- `create()` para novos, `reconstitute()` para rebuild do banco
+- Entities internas (arrays) têm identidade via IDValueObject — acessadas via métodos do aggregate
+- Value objects representam propriedades com regra embutida (`Email`, `Password`)
+- Estado nunca modificado de fora — apenas via métodos do aggregate
 
-## Estrutura de uma entity
+---
+
+## IDValueObject
+
+Toda aggregate e entity possui IDValueObject tipado — nunca `string` puro para identidade.
 
 ```typescript
-// domain/entities/form.entity.ts
-export class Form {
-  constructor(
-    private readonly id: string,
-    private readonly organizationId: string,
-    private title: string,
-    private status: FormStatus,
-  ) {}
-
-  publish(): void {
-    if (this.status !== FormStatus.DRAFT) {
-      throw new DomainError('Only draft forms can be published');
-    }
-    this.status = FormStatus.ACTIVE;
+// domain/aggregate/value-objects/user-id.vo.ts
+export class UserId {
+  private constructor(private readonly value: string) {}
+  static create(): UserId { return new UserId(randomUUID()); }
+  static from(value: string): UserId {
+    if (!value?.trim()) throw new Error('Invalid UserId');
+    return new UserId(value);
   }
+  getValue(): string { return this.value; }
+  equals(other: UserId): boolean { return this.value === other.value; }
 }
 ```
 
-**Regras:**
-- Entities possuem métodos de domínio (não são anêmicas)
-- Validações de negócio dentro da entity
-- Construtor valida invariantes
+Cada aggregate e entity tem seu tipo de ID: `UserId`, `RefreshTokenId`, `FormId`, etc.
 
-## Estrutura de um value object
+---
+
+## Entity (interna ao Aggregate)
+
+Entities vivem dentro do aggregate como propriedades (geralmente arrays). Sem coleção própria no banco.
 
 ```typescript
-// domain/value-objects/email.vo.ts
+// domain/aggregate/entities/refresh-token.entity.ts
+export class RefreshTokenEntity {
+  private constructor(private props: RefreshTokenProps) {}
+
+  static create(expiresInMs: number): RefreshTokenEntity {
+    const rawToken = randomUUID();
+    return new RefreshTokenEntity({
+      id: RefreshTokenId.create(),
+      tokenHash: sha256(rawToken),
+      family: randomUUID(),
+      usedAt: null,
+      expiresAt: new Date(Date.now() + expiresInMs),
+      createdAt: new Date(),
+      _rawToken: rawToken,
+    });
+  }
+
+  static reconstitute(props: RefreshTokenProps): RefreshTokenEntity { return new RefreshTokenEntity(props); }
+
+  markAsUsed(): void { this.props.usedAt = new Date(); }
+  isExpired(): boolean { return new Date() > this.props.expiresAt; }
+  wasUsed(): boolean { return this.props.usedAt !== null; }
+
+  get rawToken(): string | undefined { return this.props._rawToken; } // só após create()
+  get tokenHash(): string { return this.props.tokenHash; }
+  get family(): string { return this.props.family; }
+}
+```
+
+**Acesso correto:**
+```typescript
+const result = await this.userRepo.findById(userId);
+if (result.isFailure) return Output.fail(result.errorMessage);
+const token = result.value.findRefreshTokenByHash(hash);
+if (!token) return Output.fail('Token not found');
+```
+
+---
+
+## Value Object
+
+Imutável, sem identidade, construtor privado, `create()` com validação.
+
+```typescript
 export class Email {
   private constructor(private readonly value: string) {}
+  static create(raw: string): Email {
+    if (!raw || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) throw new Error('Invalid email');
+    return new Email(raw.toLowerCase());
+  }
+  getValue(): string { return this.value; }
+  equals(other: Email): boolean { return this.value === other.value; }
+}
+```
 
-  static create(email: string): Email {
-    if (!Email.isValid(email)) {
-      throw new DomainError('Invalid email');
+Pode lançar erro no `create()` — é boundary de entrada, não usecase.
+
+---
+
+## Output (resultado de usecase)
+
+Usecases **nunca lançam exceções** — retornam `Output<T>`. Apenas controllers convertem falhas em exceções HTTP.
+
+```typescript
+// Assinatura (src/shared/output.ts)
+class Output<T> {
+  static ok<T>(value?: T): Output<T>
+  static fail<T>(errorMessage: string): Output<T>
+  get isFailure(): boolean
+  get value(): T          // lança se isFailure
+  get errorMessage(): string
+}
+```
+
+**Usecase:**
+```typescript
+async execute(input): Promise<Output<{ accessToken: string }>> {
+  const result = await this.userRepo.findByEmail(email);
+  if (result.isFailure) return Output.fail('Invalid credentials');
+  if (!result.value.emailConfirmed) return Output.fail('Email not confirmed');
+  // ...
+  return Output.ok({ accessToken });
+}
+```
+
+**Controller:**
+```typescript
+const output = await this.loginUseCase.execute(dto);
+if (output.isFailure) {
+  if (output.errorMessage === 'Email not confirmed') throw new ForbiddenException(output.errorMessage);
+  throw new UnauthorizedException(output.errorMessage);
+}
+return output.value;
+```
+
+---
+
+## Repositório
+
+1 por módulo. `save()` é sempre upsert. Inputs/outputs usam tipos de domínio.
+
+```typescript
+// domain/repositories/user.repository.ts
+export interface IUserRepository {
+  save(user: User): Promise<void>;
+  findById(id: UserId): Promise<Output<User>>;
+  findByEmail(email: Email): Promise<Output<User>>;
+  findByRefreshTokenHash(hash: string): Promise<Output<User>>;
+  exists(email: Email): Promise<boolean>;
+}
+export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
+```
+
+```typescript
+// infra/repositories/mongo-user.repository.ts
+async save(user: User): Promise<void> {
+  await this.userModel.findOneAndUpdate(
+    { _id: user.id.getValue() },
+    { $set: this.toDocument(user) },
+    { upsert: true },
+  );
+}
+async findById(id: UserId): Promise<Output<User>> {
+  const doc = await this.userModel.findOne({ _id: id.getValue() }).exec();
+  if (!doc) return Output.fail('User not found');
+  return Output.ok(this.toEntity(doc));
+}
+```
+
+**Regras:** `save()` recebe o aggregate inteiro. `findBy*()` retorna `Output<Aggregate>`. Mapeamento aggregate ↔ documento exclusivo no repositório (`toDocument`, `toEntity`).
+
+---
+
+## Usecase
+
+```typescript
+@Injectable()
+export class LoginUseCase {
+  constructor(
+    @Inject(USER_REPOSITORY) private readonly userRepo: IUserRepository,
+    @Inject('JWT_SIGN_FUNCTION') private readonly jwtSign: JwtSignFn,
+  ) {}
+
+  async execute(input: LoginInput): Promise<Output<LoginOutput>> {
+    const result = await this.userRepo.findByEmail(Email.create(input.email));
+    if (result.isFailure) return Output.fail('Invalid credentials');
+    const user = result.value;
+    if (!await user.passwordHash.compare(input.password)) return Output.fail('Invalid credentials');
+    if (!user.emailConfirmed) return Output.fail('Email not confirmed');
+    // ...
+    return Output.ok({ accessToken, refreshToken: token.rawToken });
+  }
+}
+```
+
+**Regras:** 1 arquivo por usecase (`verbo-substantivo.usecase.ts`). Método `execute()`. Retorna `Output<T>`. Trabalha com tipos de domínio, nunca DTOs.
+
+---
+
+## Controller
+
+```typescript
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  @Post('login')
+  @Public()
+  @ApiOperation({ summary: 'Login' })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({ status: 200, type: LoginResponseDto })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
+  @ApiResponse({ status: 403, description: 'Email não confirmado' })
+  async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
+    const output = await this.loginUseCase.execute(dto);
+    if (output.isFailure) {
+      if (output.errorMessage === 'Email not confirmed') throw new ForbiddenException(output.errorMessage);
+      throw new UnauthorizedException(output.errorMessage);
     }
-    return new Email(email.toLowerCase());
-  }
-
-  static isValid(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  getValue(): string {
-    return this.value;
+    return output.value;
   }
 }
 ```
 
-**Regras:**
-- Imutável
-- Factory method `create()` com validação
-- Construtor privado
+**Regras:** Sem lógica de negócio. Único lugar onde `Output.isFailure` vira exceção HTTP. **Swagger obrigatório em toda rota:** `@ApiTags`, `@ApiOperation`, `@ApiResponse` (todos os status), `@ApiBearerAuth` em rotas autenticadas.
 
-## Interface de repositório
+---
 
-```typescript
-// domain/repositories/form.repository.ts
-export interface IFormRepository {
-  findById(id: string): Promise<Form | null>;
-  findByOrganizationId(orgId: string): Promise<Form[]>;
-  save(form: Form): Promise<void>;
-  delete(id: string): Promise<void>;
-}
-```
-
-**Regras:**
-- Interface pura, sem dependência de infra
-- Trabalha com entidades de domínio, não schemas
-- Localizada em `domain/repositories/`
-
-## Estrutura de um controller
+## DTO
 
 ```typescript
-// infra/controllers/form.controller.ts
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+export class LoginDto {
+  @ApiProperty({ example: 'user@example.com' })
+  @IsEmail()
+  email: string;
 
-@ApiTags('forms')
-@Controller('forms')
-export class FormController {
-  constructor(private readonly createForm: CreateFormUseCase) {}
-
-  @Post()
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Criar formulário' })
-  @ApiBody({ type: CreateFormDto })
-  @ApiResponse({ status: 201, description: 'Formulário criado com sucesso', type: FormResponseDto })
-  @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  @ApiResponse({ status: 401, description: 'Não autenticado' })
-  async create(@Body() dto: CreateFormDto): Promise<FormResponseDto> {
-    const form = await this.createForm.execute(dto);
-    return FormMapper.toDto(form);
-  }
-}
-```
-
-**Regras:**
-- Controller não contém lógica de negócio
-- Valida input (DTOs com class-validator)
-- Delega para usecases
-- Converte resposta para DTO
-- **Toda rota deve ter documentação Swagger completa** — `@ApiTags`, `@ApiOperation`, `@ApiResponse` (todos os status), `@ApiBearerAuth` em rotas autenticadas
-
-## Estrutura de um DTO
-
-DTOs de request e response devem usar `@ApiProperty` para aparecerem documentados no Swagger:
-
-```typescript
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional } from 'class-validator';
-
-export class CreateFormDto {
-  @ApiProperty({ example: 'Pesquisa de satisfação', description: 'Título do formulário' })
+  @ApiProperty({ example: 'Secure1234' })
   @IsString()
-  title: string;
-
-  @ApiPropertyOptional({ example: 'Formulário anônimo de satisfação' })
-  @IsOptional()
-  @IsString()
-  description?: string;
+  password: string;
 }
 ```
 
-**Regras:**
-- `@ApiProperty()` em campos obrigatórios
-- `@ApiPropertyOptional()` em campos opcionais
-- Sempre incluir `example` para facilitar testes no Swagger UI
-- DTOs de response também devem ser decorados (o Swagger usa o tipo para gerar o schema da resposta)
+`@ApiProperty` em obrigatórios, `@ApiPropertyOptional` em opcionais. DTOs de response também decorados.
+
+---
 
 ## Testes e TDD
 
-O projeto é guiado por **TDD (Test-Driven Development)**. Toda feature começa pelos testes — os testes definem o comportamento esperado e o código de produção é escrito para fazê-los passar.
-
-### Framework de testes
-
-- **Jest** — framework de testes do backend
-- Cada arquivo de código deve ter seu arquivo de teste correspondente
-
-### Convenção de nomenclatura
-
-| Tipo de arquivo | Extensão de teste | Tipo de teste |
+| Arquivo | Extensão de teste | Tipo |
 |---|---|---|
-| Usecases (`*.usecase.ts`) | `*.usecase.spec.ts` | Unitário |
-| Entities (`*.entity.ts`) | `*.entity.spec.ts` | Unitário |
-| Value Objects (`*.vo.ts`) | `*.vo.spec.ts` | Unitário |
-| Controllers (`*.controller.ts`) | `*.controller.test.ts` | Integração |
-| Repositories (`*-*.repository.ts`) | `*-*.repository.test.ts` | Integração |
+| `*.usecase.ts` | `*.usecase.spec.ts` | Unitário |
+| `*.aggregate.ts` / `*.entity.ts` / `*.vo.ts` | `*.spec.ts` | Unitário |
+| `*.controller.ts` | `*.controller.test.ts` | Integração |
+| `mongo-*.repository.ts` | `*.repository.test.ts` | Integração |
 
-### Testes unitários (`.spec.ts`)
+**Fluxo TDD:** Red → Green → Refactor.
 
-Testam regras de negócio isoladamente, sem dependências externas.
-
+**Spec unitário (usecase):**
 ```typescript
-// domain/usecases/create-form.usecase.spec.ts
-describe('CreateFormUseCase', () => {
-  let usecase: CreateFormUseCase;
-  let formRepository: IFormRepository;
+describe('LoginUseCase', () => {
+  let usecase: LoginUseCase;
+  let userRepo: jest.Mocked<IUserRepository>;
 
   beforeEach(() => {
-    formRepository = { save: jest.fn(), findById: jest.fn() } as any;
-    usecase = new CreateFormUseCase(formRepository);
+    userRepo = { findByEmail: jest.fn(), save: jest.fn() } as any;
+    usecase = new LoginUseCase(userRepo, jest.fn().mockReturnValue('token'));
   });
 
-  it('should create a form with draft status', async () => {
-    const input = { title: 'Survey', organizationId: 'org-1' };
-    const form = await usecase.execute(input);
-    expect(form.status).toBe(FormStatus.DRAFT);
-    expect(formRepository.save).toHaveBeenCalled();
-  });
-});
-```
-
-```typescript
-// domain/entities/form.entity.spec.ts
-describe('Form', () => {
-  it('should publish a draft form', () => {
-    const form = new Form('id', 'org-1', 'Survey', FormStatus.DRAFT);
-    form.publish();
-    expect(form.status).toBe(FormStatus.ACTIVE);
+  it('should return tokens on valid login', async () => {
+    const user = await createConfirmedUser();
+    userRepo.findByEmail.mockResolvedValue(Output.ok(user));
+    const output = await usecase.execute({ email: 'u@x.com', password: 'Pass1' });
+    expect(output.isFailure).toBe(false);
+    expect(output.value.accessToken).toBeDefined();
   });
 
-  it('should throw when publishing a non-draft form', () => {
-    const form = new Form('id', 'org-1', 'Survey', FormStatus.ACTIVE);
-    expect(() => form.publish()).toThrow('Only draft forms can be published');
+  it('should fail with generic message when user not found', async () => {
+    userRepo.findByEmail.mockResolvedValue(Output.fail('not found'));
+    const output = await usecase.execute({ email: 'x@x.com', password: 'p' });
+    expect(output.isFailure).toBe(true);
+    expect(output.errorMessage).toBe('Invalid credentials');
   });
 });
 ```
-
-### Testes de integração (`.test.ts`)
-
-Testam a integração com framework (NestJS) e banco de dados (MongoDB).
-
-```typescript
-// infra/controllers/form.controller.test.ts
-describe('FormController (integration)', () => {
-  let app: INestApplication;
-
-  beforeAll(async () => {
-    const module = await Test.createTestingModule({ /* ... */ }).compile();
-    app = module.createNestApplication();
-    await app.init();
-  });
-
-  afterAll(async () => { await app.close(); });
-
-  it('POST /forms should create a form', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/forms')
-      .send({ title: 'Survey', description: 'A test survey' })
-      .expect(201);
-    expect(response.body.title).toBe('Survey');
-  });
-});
-```
-
-### Fluxo TDD
-
-1. **Red** — Escrever o teste primeiro (ele deve falhar)
-2. **Green** — Escrever o mínimo de código para o teste passar
-3. **Refactor** — Melhorar o código mantendo os testes passando
-
-### Testes no frontend
-
-Não há necessidade de testes no frontend neste momento.
 
 ---
 
 ## Nomes de arquivos
 
 ```
-create-form.usecase.ts
-create-form.usecase.spec.ts     (teste unitário)
-form.entity.ts
-form.entity.spec.ts             (teste unitário)
-email.vo.ts
-email.vo.spec.ts                (teste unitário)
-form.repository.ts              (interface — sem teste)
-mongo-form.repository.ts        (implementação)
-mongo-form.repository.test.ts   (teste de integração)
-form.controller.ts
-form.controller.test.ts         (teste de integração)
-form.schema.ts
+user.aggregate.ts / user.aggregate.spec.ts
+refresh-token.entity.ts / refresh-token.entity.spec.ts
+user-id.vo.ts
+email.vo.ts / email.vo.spec.ts
+user.repository.ts              (interface — sem teste)
+mongo-user.repository.ts / mongo-user.repository.test.ts
+auth.controller.ts / auth.controller.test.ts
+user.schema.ts
+login.usecase.ts / login.usecase.spec.ts
 ```

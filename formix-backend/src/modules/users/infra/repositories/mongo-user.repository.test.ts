@@ -5,7 +5,9 @@ import { MongooseModule as MongooseRootModule } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { MongoUserRepository } from './mongo-user.repository';
 import { UserSchemaClass, UserSchema, UserDocument } from '../schemas/user.schema';
-import { User } from '@modules/users/domain/aggregate/entities/user.entity';
+import { User } from '@modules/users/domain/aggregate/user.aggregate';
+import { UserId } from '@modules/users/domain/aggregate/value-objects/user-id.vo';
+import { EmailConfirmationTokenEntity } from '@modules/users/domain/aggregate/entities/email-confirmation-token.entity';
 import { Email } from '@shared/value-objects/email.vo';
 import { Password } from '@shared/value-objects/password.vo';
 
@@ -52,9 +54,21 @@ describe('MongoUserRepository (integration)', () => {
       const user = await createTestUser();
       await repository.save(user);
 
-      const doc = await userModel.findById(user.id);
+      const doc = await userModel.findById(user.id.getValue());
       expect(doc).not.toBeNull();
       expect(doc!.email).toBe('test@example.com');
+      expect(doc!.emailConfirmationToken).toBeNull();
+    });
+
+    it('should save user with emailConfirmationToken embedded', async () => {
+      const user = await createTestUser();
+      const token = EmailConfirmationTokenEntity.create(86400000);
+      user.setEmailConfirmationToken(token);
+      await repository.save(user);
+
+      const doc = await userModel.findById(user.id.getValue());
+      expect(doc!.emailConfirmationToken).not.toBeNull();
+      expect(doc!.emailConfirmationToken!.tokenHash).toBe(token.tokenHash);
     });
 
     it('should update an existing user', async () => {
@@ -64,7 +78,7 @@ describe('MongoUserRepository (integration)', () => {
       user.updateName('Updated Name');
       await repository.save(user);
 
-      const doc = await userModel.findById(user.id);
+      const doc = await userModel.findById(user.id.getValue());
       expect(doc!.name).toBe('Updated Name');
     });
   });
@@ -74,14 +88,14 @@ describe('MongoUserRepository (integration)', () => {
       const user = await createTestUser();
       await repository.save(user);
 
-      const found = await repository.findById(user.id);
-      expect(found).not.toBeNull();
-      expect(found!.email.getValue()).toBe('test@example.com');
+      const result = await repository.findById(user.id);
+      expect(result.isFailure).toBe(false);
+      expect(result.value.email.getValue()).toBe('test@example.com');
     });
 
-    it('should return null if user not found', async () => {
-      const found = await repository.findById('non-existent-uuid');
-      expect(found).toBeNull();
+    it('should return failure if user not found', async () => {
+      const result = await repository.findById(UserId.from('non-existent-uuid'));
+      expect(result.isFailure).toBe(true);
     });
   });
 
@@ -90,14 +104,33 @@ describe('MongoUserRepository (integration)', () => {
       const user = await createTestUser();
       await repository.save(user);
 
-      const found = await repository.findByEmail('test@example.com');
-      expect(found).not.toBeNull();
-      expect(found!.name).toBe('Test User');
+      const result = await repository.findByEmail(Email.create('test@example.com'));
+      expect(result.isFailure).toBe(false);
+      expect(result.value.name).toBe('Test User');
     });
 
-    it('should return null if email not found', async () => {
-      const found = await repository.findByEmail('notfound@example.com');
-      expect(found).toBeNull();
+    it('should return failure if email not found', async () => {
+      const result = await repository.findByEmail(Email.create('notfound@example.com'));
+      expect(result.isFailure).toBe(true);
+    });
+  });
+
+  describe('findByEmailConfirmationTokenHash()', () => {
+    it('should find a user by email confirmation token hash', async () => {
+      const user = await createTestUser();
+      const token = EmailConfirmationTokenEntity.create(86400000);
+      user.setEmailConfirmationToken(token);
+      await repository.save(user);
+
+      const result = await repository.findByEmailConfirmationTokenHash(token.tokenHash);
+      expect(result.isFailure).toBe(false);
+      expect(result.value.email.getValue()).toBe('test@example.com');
+      expect(result.value.emailConfirmationToken).not.toBeNull();
+    });
+
+    it('should return failure when hash not found', async () => {
+      const result = await repository.findByEmailConfirmationTokenHash('nonexistent-hash');
+      expect(result.isFailure).toBe(true);
     });
   });
 
@@ -106,12 +139,12 @@ describe('MongoUserRepository (integration)', () => {
       const user = await createTestUser();
       await repository.save(user);
 
-      const result = await repository.exists('test@example.com');
+      const result = await repository.exists(Email.create('test@example.com'));
       expect(result).toBe(true);
     });
 
     it('should return false if email does not exist', async () => {
-      const result = await repository.exists('notfound@example.com');
+      const result = await repository.exists(Email.create('notfound@example.com'));
       expect(result).toBe(false);
     });
   });

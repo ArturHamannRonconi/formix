@@ -1,32 +1,45 @@
 # Regras de Domínio — Auth
 
+## Tokens de autenticação
+
+Todos os tokens são estado do `UserAggregate` — **sem coleções separadas**:
+
+| Token | Campo no User | Finder no IUserRepository |
+|---|---|---|
+| `EmailConfirmationTokenEntity` | `emailConfirmationToken` (object\|null) | `findByEmailConfirmationTokenHash(hash)` |
+| `RefreshTokenEntity[]` | `refreshTokens` (array) | `findByRefreshTokenHash(hash)` |
+| `PasswordResetTokenEntity` | `passwordResetToken` (object\|null) | `findByPasswordResetTokenHash(hash)` |
+
 ## Signup
 
-- Ao criar conta, o sistema cria: User + Organization + Membership (role: admin)
-- O primeiro usuário de uma organização é sempre admin
-- Email de confirmação é enviado após signup
-- Usuário não pode acessar funcionalidades até confirmar email
+- Cria User + Organization (com Membership admin embutida) atomicamente
+- Gera `EmailConfirmationToken` embutido no User
+- Envia email de confirmação; usuário não acessa funcionalidades até confirmar
 
 ## Login
 
-- Autenticação por email + senha
-- Retorna access token (JWT, curta duração) + refresh token (longa duração)
-- Access token contém: userId, organizationId, role
+- Valida email + senha; exige `emailConfirmed = true`
+- Retorna access token JWT (payload: userId, organizationId, role) + refresh token bruto
+- Adiciona `RefreshTokenEntity` ao array `user.refreshTokens`
 
-## Refresh token
+## Refresh token rotation
 
-- Usado para obter novo access token sem re-login
 - Refresh token é invalidado após uso (rotation)
-
-## Reset de senha
-
-- Usuário solicita reset informando email
-- Sistema envia email com link contendo token temporário
-- Token expira em tempo configurável
-- Ao confirmar, senha é atualizada e todos os refresh tokens são invalidados
+- Token reapresentado após uso → toda a família (sessão) é invalidada (theft detection)
+- `family` UUID agrupa todos os tokens de uma mesma sessão
 
 ## Confirmação de email
 
-- Token único enviado por email
-- Expira em tempo configurável
-- Após confirmação, `emailConfirmed = true`
+- Token expira em tempo configurável (`EMAIL_CONFIRMATION_EXPIRES_IN`)
+- `user.confirmEmail()` define `emailConfirmed = true` e limpa `emailConfirmationToken`
+
+## Reset de senha
+
+- Usuário solicita informando email — resposta é sempre 200 (não revela existência)
+- Token expira em tempo configurável (`PASSWORD_RESET_EXPIRES_IN`)
+- Ao confirmar: `user.updatePassword()` + `user.clearPasswordResetToken()` + `user.invalidateAllRefreshTokens()`
+
+## Logout
+
+- Invalida a família inteira do refresh token (encerra a sessão no dispositivo)
+- Idempotente: token não encontrado → 200 silencioso

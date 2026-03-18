@@ -24,7 +24,15 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npm test:*)",
-      "Bash(npx jest:*)"
+      "Bash(npx jest:*)",
+      "Skill(*)",
+      "Bash(npm list:*)",
+      "Bash(/home/arturronconi/personal-projects/formix/formix-backend/.env:*)",
+      "Bash(/home/arturronconi/personal-projects/formix/formix-backend/.env.example:*)",
+      "Bash(xargs rmdir:*)",
+      "Bash(find /home/arturronconi/personal-projects/formix -name *.md -path */.claude/skills/*)",
+      "Read(//home/arturronconi/.claude/**)",
+      "Bash(gh pr:*)"
     ]
   }
 }

@@ -36,7 +36,21 @@ git show <commit-hash> -p           # diff completo
 
 Entenda **o que cada commit faz** antes de escrever qualquer coisa.
 
-### Passo 3 — Monte o corpo do PR
+### Passo 3 — Identifique as issues fechadas por este PR
+
+Execute para ver as issues abertas relacionadas ao escopo do PR:
+
+```bash
+gh issue list --repo <owner>/<repo> --state open
+```
+
+Inspecione os commits e o nome da branch para identificar quais issues este PR resolve. Regras:
+- Se o PR implementa uma US específica (ex: US-004), procure a issue correspondente (`[US-004]`) e inclua `Closes #N`
+- Se o PR fecha múltiplas issues, inclua uma linha `Closes #N` por issue
+- Se nenhuma issue se aplica, omita a seção — **nunca invente ou assuma issues**
+- Em caso de dúvida, pergunte ao usuário: "Este PR fecha alguma issue específica?"
+
+### Passo 4 — Monte o corpo do PR
 
 Use o template abaixo. Preencha com base na análise dos commits.
 
@@ -48,6 +62,13 @@ Use o template abaixo. Preencha com base na análise dos commits.
 ## Descrição
 
 <Resumo em 2–4 frases sobre o objetivo geral do PR. O que foi implementado? Por que? Qual problema resolve?>
+
+---
+
+## Closes
+
+Closes #N
+<!-- Repita uma linha por issue fechada. Remova esta seção se não fechar nenhuma issue. -->
 
 ---
 
@@ -94,7 +115,7 @@ Use o template abaixo. Preencha com base na análise dos commits.
 
 ---
 
-## Passo 4 — Crie o PR
+## Passo 5 — Crie o PR
 
 ```bash
 gh pr create \
@@ -118,3 +139,4 @@ Antes de chamar `gh pr create`:
 - [ ] Título segue o padrão `tipo(escopo): descrição`
 - [ ] Cada commit tem hash + mensagem + descrição detalhada
 - [ ] Checklist do template está no corpo do PR
+- [ ] Identificou e incluiu `Closes #N` para todas as issues fechadas por este PR
