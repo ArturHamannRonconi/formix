@@ -326,3 +326,19 @@
   - `formix-frontend/src/app/not-found.tsx`
   - `formix-frontend/src/app/not-found.module.css`
 - **Verificação final:** typecheck OK, build OK
+
+### features/start US-017: Perfil do Usuário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-backend/src/modules/users/domain/usecases/get-profile.usecase.ts`
+  - `formix-backend/src/modules/users/domain/usecases/get-profile.usecase.spec.ts`
+  - `formix-backend/src/modules/users/domain/usecases/update-profile.usecase.ts`
+  - `formix-backend/src/modules/users/domain/usecases/update-profile.usecase.spec.ts`
+  - `formix-backend/src/modules/users/infra/controllers/get-profile-response.dto.ts`
+  - `formix-backend/src/modules/users/infra/controllers/update-profile.dto.ts`
+  - `formix-backend/src/modules/users/infra/controllers/users.controller.ts`
+  - `formix-backend/src/modules/users/infra/controllers/users.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/users/users.module.ts`
+- **Verificação:** typecheck OK, testes OK (8 unit + 6 integration)
