@@ -262,3 +262,67 @@
   - `formix-backend/src/modules/auth/infra/controllers/auth.controller.ts` (POST /auth/logout)
   - `formix-backend/src/modules/auth/auth.module.ts`
 - **Verificação final:** typecheck OK (backend + frontend), 97 testes unitários OK, 29 testes de integração OK, build frontend OK
+
+## Fase 3: Layout e Navegação
+
+### features/start US-036: Layout Principal — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/components/Layout/AppShell.tsx` + `.module.css`
+  - `formix-frontend/src/components/Layout/Sidebar.tsx` + `.module.css`
+  - `formix-frontend/src/components/Layout/Header.tsx` + `.module.css`
+  - `formix-frontend/src/components/Layout/PageContainer.tsx` + `.module.css`
+  - `formix-frontend/src/components/Layout/index.ts`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-037: Componentes de Input Reutilizáveis — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/types/input.types.ts`
+  - `formix-frontend/src/components/inputs/TextInput/` (TextInput.tsx, module.css, index.ts)
+  - `formix-frontend/src/components/inputs/EmailInput/`
+  - `formix-frontend/src/components/inputs/TextArea/`
+  - `formix-frontend/src/components/inputs/NumberInput/`
+  - `formix-frontend/src/components/inputs/DatePicker/`
+  - `formix-frontend/src/components/inputs/Toggle/`
+  - `formix-frontend/src/components/inputs/RadioGroup/`
+  - `formix-frontend/src/components/inputs/Checkbox/`
+  - `formix-frontend/src/components/inputs/Dropdown/`
+  - `formix-frontend/src/components/inputs/RatingInput/`
+  - `formix-frontend/src/components/inputs/FileUpload/`
+  - `formix-frontend/src/components/inputs/index.ts`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-045: Rotas e Navegação Completa — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/types/auth.types.ts`
+  - `formix-frontend/src/hooks/useAuth.ts`
+  - `formix-frontend/src/middleware.ts`
+  - `formix-frontend/src/app/(auth)/layout.tsx`
+  - `formix-frontend/src/app/(app)/layout.tsx`
+  - `formix-frontend/src/app/(app)/forms/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/forms/new/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/forms/[id]/edit/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/forms/[id]/responses/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/forms/[id]/analytics/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/settings/profile/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(auth)/check-email/page.tsx`
+  - `formix-frontend/src/app/(auth)/invite/page.tsx` (placeholder)
+  - `formix-frontend/src/app/(public)/forms/[publicToken]/page.tsx` (placeholder)
+- **Arquivos modificados:**
+  - Páginas de auth movidas de `src/app/*` para `src/app/(auth)/*`
+  - `formix-frontend/src/app/(auth)/login/page.tsx` (redirect /forms em vez de /dashboard)
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-046: Página 404
+- **Status:** Concluído
+- **Data:** 2026-03-18
+- **Arquivos criados:**
+  - `formix-frontend/src/app/not-found.tsx`
+  - `formix-frontend/src/app/not-found.module.css`
+- **Verificação final:** typecheck OK, build OK

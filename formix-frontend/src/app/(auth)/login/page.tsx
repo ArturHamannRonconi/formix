@@ -35,7 +35,7 @@ export default function LoginPage() {
       const response = await login(email, password);
       setAccessToken(response.accessToken);
       setRefreshToken(response.refreshToken);
-      router.push('/dashboard');
+      router.push('/forms');
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.statusCode === 403) {

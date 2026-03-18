@@ -1,0 +1,81 @@
+.header {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid #7c6af7;
+  outline-offset: 2px;
+}
+
+.orgName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userName {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.logoutButton {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.logoutButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.logoutButton:focus-visible {
+  outline: 2px solid #7c6af7;
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: #374151;
+}
+
+.radio {
+  width: 18px;
+  height: 18px;
+  accent-color: #7c6af7;
+  cursor: pointer;
+}
+
+.radio:focus-visible {
+  outline: 2px solid #7c6af7;
+  outline-offset: 2px;
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+}
+
+.errorMsg {
+  font-size: 0.8125rem;
+  color: #ef4444;
+}
