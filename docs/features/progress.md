@@ -327,6 +327,8 @@
   - `formix-frontend/src/app/not-found.module.css`
 - **Verificação final:** typecheck OK, build OK
 
+## Fase 4: Gestão de Usuários
+
 ### features/start US-017: Perfil do Usuário — Backend
 - **Status:** Concluído
 - **Data:** 2026-03-18
