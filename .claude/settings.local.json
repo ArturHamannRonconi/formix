@@ -51,7 +51,27 @@
       "Bash(docker exec:*)",
       "Bash(ls formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/)",
       "Bash(npx tsc:*)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/edit/page.tsx)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/page.tsx)",
+      "Bash(xargs cat:*)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/layout.tsx)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/layout.tsx)",
+      "Bash(mkdir -p \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(public\\)/f/[publicToken]\")",
+      "Bash(mv \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(public\\)/forms/[publicToken]/page.tsx\" \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(public\\)/f/[publicToken]/page.tsx\")",
+      "Bash(rmdir \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(public\\)/forms/[publicToken]\" \"/home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\(public\\)/forms\")",
+      "Bash(head:*)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/f/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/f/[publicToken]/)",
+      "Bash(cat:*)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/responses/)",
+      "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/[id]/)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/responses/page.tsx)",
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/[id]/page.tsx)"
     ]
   }
 }
