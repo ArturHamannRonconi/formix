@@ -669,3 +669,19 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/app/(app)/forms/[id]/responses/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-043: Métricas por Formulário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/analytics/domain/usecases/get-form-analytics.usecase.ts`
+  - `formix-backend/src/modules/analytics/domain/usecases/get-form-analytics.usecase.spec.ts`
+  - `formix-backend/src/modules/analytics/infra/controllers/analytics.controller.ts`
+  - `formix-backend/src/modules/analytics/infra/controllers/analytics.controller.test.ts`
+  - `formix-backend/src/modules/analytics/infra/controllers/analytics-response.dto.ts`
+  - `formix-backend/src/modules/analytics/analytics.module.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/responses/domain/repositories/response.repository.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.ts`
+  - `formix-backend/src/app.module.ts`
+- **Verificação:** typecheck OK, testes OK (13 unit + 5 integration)
