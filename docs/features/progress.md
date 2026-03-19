@@ -420,3 +420,39 @@
   - `formix-backend/src/modules/invitations/infra/repositories/mongo-invitation.repository.test.ts`
   - `formix-backend/src/modules/invitations/invitations.module.ts`
 - **Verificação:** typecheck OK, testes OK (13 unit + 9 integration)
+
+### features/start US-024: Criar Convite — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/create-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/create-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/create-invitation.dto.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitation-response.dto.ts`
+- **Verificação:** typecheck OK, testes OK (5 unit)
+
+### features/start US-025: Aceitar Convite — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/accept-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/accept-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/accept-invitation.dto.ts`
+- **Verificação:** typecheck OK, testes OK (6 unit)
+
+### features/start US-026: Listar, Reenviar e Cancelar Convites — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/list-invitations.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/list-invitations.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/resend-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/resend-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/cancel-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/cancel-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitations.controller.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitations.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/invitations/invitations.module.ts`
+  - `formix-backend/src/app.module.ts`
+- **Verificação:** typecheck OK, testes OK (11 unit + 17 integration)
