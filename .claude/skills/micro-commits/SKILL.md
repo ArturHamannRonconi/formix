@@ -46,7 +46,7 @@ Commits devem seguir ordem topológica: dependências primeiro.
 
 Ordem sugerida:
 1. Infraestrutura e configs (`.env`, `docker-compose`, packages)
-2. Core / shared (database, middlewares, shared utils)
+2. Core / shared (database, shared utils)
 3. Domain layer de cada módulo (entities, value objects, use cases, interfaces de repositório)
 4. Infra layer de cada módulo (schemas, controllers, repositories concretos)
 5. Testes unitários

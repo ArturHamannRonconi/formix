@@ -49,7 +49,9 @@
       "Bash(mongosh:*)",
       "Bash(docker ps:*)",
       "Bash(docker exec:*)",
-      "Bash(ls formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/)"
+      "Bash(ls formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/)",
+      "Bash(npx tsc:*)",
+      "Bash(echo \"EXIT: $?\")"
     ]
   }
 }
