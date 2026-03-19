@@ -46,6 +46,7 @@ describe('ListResponsesUseCase', () => {
     responseRepo = {
       save: jest.fn(),
       findByFormId: jest.fn(),
+      findAllByFormId: jest.fn(),
       countByFormId: jest.fn(),
       deleteByFormId: jest.fn(),
     };

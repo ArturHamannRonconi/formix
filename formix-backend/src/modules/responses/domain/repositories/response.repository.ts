@@ -9,6 +9,7 @@ export interface FindByFormIdOptions {
 export interface IResponseRepository {
   save(response: ResponseAggregate): Promise<void>;
   findByFormId(formId: string, options?: FindByFormIdOptions): Promise<ResponseAggregate[]>;
+  findAllByFormId(formId: string): Promise<ResponseAggregate[]>;
   countByFormId(formId: string): Promise<number>;
   deleteByFormId(formId: string): Promise<void>;
 }

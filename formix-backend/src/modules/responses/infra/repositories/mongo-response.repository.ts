@@ -46,6 +46,15 @@ export class MongoResponseRepository implements IResponseRepository {
     return docs.map(this.toEntity);
   }
 
+  async findAllByFormId(formId: string): Promise<ResponseAggregate[]> {
+    const docs = await this.responseModel
+      .find({ formId })
+      .sort({ submittedAt: 1 })
+      .exec();
+
+    return docs.map(this.toEntity);
+  }
+
   async countByFormId(formId: string): Promise<number> {
     return this.responseModel.countDocuments({ formId }).exec();
   }
