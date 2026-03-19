@@ -536,3 +536,26 @@
   - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
   - `formix-backend/src/modules/forms/forms.module.ts`
 - **Verificação:** typecheck OK, testes OK (15 unit + 5 integration)
+
+### features/start US-032: Publicar Formulário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/publish-form.usecase.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/publish-form-response.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
+  - `formix-backend/src/modules/forms/forms.module.ts`
+- **Verificação:** typecheck OK, testes OK (4 unit + 3 integration)
+
+### features/start US-033: Fechar Formulário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/close-form.usecase.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
+  - `formix-backend/src/modules/forms/forms.module.ts`
+- **Verificação:** typecheck OK, testes OK (3 unit + 2 integration)
