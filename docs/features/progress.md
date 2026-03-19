@@ -559,3 +559,15 @@
   - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
   - `formix-backend/src/modules/forms/forms.module.ts`
 - **Verificação:** typecheck OK, testes OK (3 unit + 2 integration)
+
+### features/start US-034: Lista de Formulários — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/services/forms/forms.types.ts`
+  - `formix-frontend/src/services/forms/forms.service.ts`
+  - `formix-frontend/src/modules/FormCard/FormCard.tsx`
+  - `formix-frontend/src/modules/FormCard/StatusBadge.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/forms/page.tsx`
+- **Verificação:** typecheck OK, build OK
