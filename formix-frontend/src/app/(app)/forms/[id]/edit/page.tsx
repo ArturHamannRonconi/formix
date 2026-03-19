@@ -1,15 +1,14 @@
+'use client';
+
+import { useParams } from 'next/navigation';
+import { FormBuilder } from '@/modules/FormBuilder/FormBuilder';
 import { PageContainer } from '@/components/Layout';
 
-interface EditFormPageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function EditFormPage({ params }: EditFormPageProps) {
-  const { id } = await params;
+export default function EditFormPage() {
+  const params = useParams<{ id: string }>();
   return (
     <PageContainer>
-      <h1>Editar Formulário</h1>
-      <p>ID: {id} — Conteúdo em breve (US-035).</p>
+      <FormBuilder formId={params.id} />
     </PageContainer>
   );
 }
