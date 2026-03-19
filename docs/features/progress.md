@@ -477,3 +477,27 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/services/invitations/invitations.service.ts`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-029: Schemas MongoDB — Forms e Questions
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/aggregate/value-objects/form-id.vo.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/value-objects/question-id.vo.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/value-objects/form-status.vo.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/value-objects/question-type.vo.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/value-objects/public-token.vo.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/question.entity.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/question.entity.spec.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/form.aggregate.ts`
+  - `formix-backend/src/modules/forms/domain/aggregate/form.aggregate.spec.ts`
+  - `formix-backend/src/modules/forms/domain/repositories/form.repository.ts`
+  - `formix-backend/src/modules/forms/domain/repositories/question.repository.ts`
+  - `formix-backend/src/modules/forms/infra/schemas/form.schema.ts`
+  - `formix-backend/src/modules/forms/infra/schemas/question.schema.ts`
+  - `formix-backend/src/modules/forms/infra/repositories/mongo-form.repository.ts`
+  - `formix-backend/src/modules/forms/infra/repositories/mongo-form.repository.test.ts`
+  - `formix-backend/src/modules/forms/infra/repositories/mongo-question.repository.ts`
+  - `formix-backend/src/modules/forms/infra/repositories/mongo-question.repository.test.ts`
+  - `formix-backend/src/modules/forms/forms.module.ts`
+- **Verificação:** typecheck OK, testes OK (21 unit + 15 integration)
