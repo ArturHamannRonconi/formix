@@ -685,3 +685,23 @@
   - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.ts`
   - `formix-backend/src/app.module.ts`
 - **Verificação:** typecheck OK, testes OK (13 unit + 5 integration)
+
+### features/start US-044: Dashboard de Analytics — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/services/analytics/analytics.types.ts`
+  - `formix-frontend/src/services/analytics/analytics.service.ts`
+  - `formix-frontend/src/hooks/useAnalytics.ts`
+  - `formix-frontend/src/modules/Dashboard/StatCard.tsx`
+  - `formix-frontend/src/modules/Dashboard/charts/BarChart.tsx`
+  - `formix-frontend/src/modules/Dashboard/charts/PieChart.tsx`
+  - `formix-frontend/src/modules/Dashboard/charts/LineChart.tsx`
+  - `formix-frontend/src/modules/Dashboard/charts/RatingChart.tsx`
+  - `formix-frontend/src/modules/Dashboard/Dashboard.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/forms/[id]/analytics/page.tsx`
+- **Verificação:** typecheck OK, build OK (frontend)
+
+## Fase 8: Analytics — CONCLUÍDA ✓
+## PRD completo: todas as USs implementadas ✓
