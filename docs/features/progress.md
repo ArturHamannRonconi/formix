@@ -588,3 +588,24 @@
   - `formix-frontend/src/app/(app)/forms/new/page.tsx`
   - `formix-frontend/src/app/(app)/forms/[id]/edit/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-038: Schemas MongoDB — Responses e Response_Emails
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/responses/domain/aggregate/value-objects/response-id.vo.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/value-objects/response-email-id.vo.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response.aggregate.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response.aggregate.spec.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response-email.aggregate.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response-email.aggregate.spec.ts`
+  - `formix-backend/src/modules/responses/domain/repositories/response.repository.ts`
+  - `formix-backend/src/modules/responses/domain/repositories/response-email.repository.ts`
+  - `formix-backend/src/modules/responses/infra/schemas/response.schema.ts`
+  - `formix-backend/src/modules/responses/infra/schemas/response-email.schema.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.test.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response-email.repository.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response-email.repository.test.ts`
+  - `formix-backend/src/modules/responses/responses.module.ts`
+- **Verificação:** typecheck OK, testes OK (10 unit + 8 integration)
