@@ -5,15 +5,43 @@
 ```
 src/
   modules/          # Módulos de domínio (DDD)
+  providers/        # Integrações com serviços externos (ver seção abaixo)
+    email/          # Ex: console-email, sendgrid-email, ses-email
+    payment/        # Ex: stripe-gateway, pagarme-gateway
   core/
     database/       # Configuração MongoDB
     environment/    # Variáveis de ambiente
-  server/
-    middlewares/
-    routes/
   shared/           # Código compartilhado (Output, VOs, interfaces)
   utils/
 ```
+
+## Providers
+
+A pasta `src/providers/` agrupa integrações com serviços externos que a aplicação **não pode controlar nem depender diretamente**. Qualquer serviço terceiro com múltiplas implementações possíveis pertence aqui.
+
+**Regra:** O domínio define uma interface (port) em `shared/` ou dentro do próprio módulo. O provider implementa essa interface. O módulo injeta a implementação via DI — nunca importa o provider diretamente.
+
+```
+providers/
+  email/
+    interfaces/           # IEmailService (porta — definida aqui ou em shared/)
+    console-email/        # Implementação para desenvolvimento (log no console)
+    sendgrid-email/       # Implementação para produção (SendGrid)
+    ses-email/            # Alternativa (AWS SES)
+  payment/
+    interfaces/           # IPaymentGateway
+    stripe-gateway/
+    pagarme-gateway/
+```
+
+**Exemplos de o que vai em `providers/`:**
+- Serviço de email (SendGrid, SES, Mailgun, console)
+- Gateway de pagamento (Stripe, PagSeguro, PagarMe)
+- Serviço de SMS (Twilio, AWS SNS)
+- Storage de arquivos (S3, GCS, local)
+- Push notifications (Firebase FCM, OneSignal)
+
+**O que NÃO vai em `providers/`:** banco de dados (vai em `core/database/`), autenticação interna, lógica de negócio.
 
 ## DDD Simplificado
 
