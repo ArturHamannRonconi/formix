@@ -20,7 +20,7 @@ import { MongoOrganizationRepository } from '@modules/organizations/infra/reposi
 import { ORGANIZATION_REPOSITORY } from '@modules/organizations/domain/repositories/organization.repository';
 import { MongoUserRepository } from '@modules/users/infra/repositories/mongo-user.repository';
 import { USER_REPOSITORY } from '@modules/users/domain/repositories/user.repository';
-import { EMAIL_SERVICE } from '@shared/email/email-service.interface';
+import { EMAIL_SERVICE } from '@providers/email/email.provider';
 import { InvitationSchemaClass, InvitationSchema } from '../schemas/invitation.schema';
 import { OrganizationSchemaClass, OrganizationSchema } from '@modules/organizations/infra/schemas/organization.schema';
 import { UserSchemaClass, UserSchema } from '@modules/users/infra/schemas/user.schema';

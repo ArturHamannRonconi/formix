@@ -1,6 +1,6 @@
 import { ResendInvitationUseCase } from './resend-invitation.usecase';
 import { IInvitationRepository } from '../repositories/invitation.repository';
-import { IEmailService } from '@shared/email/email-service.interface';
+import { IEmailService } from '@providers/email/email.provider';
 import { Invitation } from '../aggregate/invitation.aggregate';
 import { Output } from '@shared/output';
 

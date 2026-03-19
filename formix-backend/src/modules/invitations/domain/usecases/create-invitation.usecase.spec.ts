@@ -2,7 +2,7 @@ import { CreateInvitationUseCase } from './create-invitation.usecase';
 import { IInvitationRepository } from '../repositories/invitation.repository';
 import { IOrganizationRepository } from '@modules/organizations/domain/repositories/organization.repository';
 import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
-import { IEmailService } from '@shared/email/email-service.interface';
+import { IEmailService } from '@providers/email/email.provider';
 import { Output } from '@shared/output';
 import { Organization } from '@modules/organizations/domain/aggregate/organization.aggregate';
 import { OrganizationId } from '@modules/organizations/domain/aggregate/value-objects/organization-id.vo';
