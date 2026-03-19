@@ -519,3 +519,20 @@
 - **Arquivos modificados:**
   - `formix-backend/src/modules/forms/forms.module.ts`
 - **Verificação:** typecheck OK, testes OK (17 unit + 11 integration)
+
+### features/start US-031: Gestão de Perguntas — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/add-question.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/update-question.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/remove-question.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/reorder-questions.usecase.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/add-question.dto.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/update-question.dto.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/reorder-questions.dto.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
+  - `formix-backend/src/modules/forms/forms.module.ts`
+- **Verificação:** typecheck OK, testes OK (15 unit + 5 integration)
