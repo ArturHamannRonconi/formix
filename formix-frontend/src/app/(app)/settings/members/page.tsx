@@ -5,11 +5,11 @@ import { toast } from 'sonner';
 import { PageContainer } from '@/components/Layout';
 import { MembersTable } from '@/modules/MembersTable/MembersTable';
 import { RemoveMemberModal } from '@/modules/MembersTable/RemoveMemberModal';
+import { InvitationsSection } from '@/modules/InvitationsSection/InvitationsSection';
 import { listMembers, removeMember } from '@/services/organizations/organizations.service';
 import { useAuth } from '@/hooks/useAuth';
 import { ApiError } from '@/types/api-error';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import type { Member } from '@/services/organizations/organizations.types';
 
 export default function MembersPage() {
@@ -75,11 +75,6 @@ export default function MembersPage() {
     <PageContainer>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Membros</h1>
-        {user?.role === 'admin' && (
-          <Button disabled variant="outline">
-            Convidar membro
-          </Button>
-        )}
       </div>
 
       {members.length === 0 ? (
@@ -104,6 +99,8 @@ export default function MembersPage() {
           onCancel={() => setMemberToRemove(null)}
         />
       )}
+
+      <InvitationsSection isAdmin={user?.role === 'admin'} />
     </PageContainer>
   );
 }

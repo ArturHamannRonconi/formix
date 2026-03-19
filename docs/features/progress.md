@@ -327,6 +327,8 @@
   - `formix-frontend/src/app/not-found.module.css`
 - **Verificação final:** typecheck OK, build OK
 
+## Fase 4: Gestão de Usuários
+
 ### features/start US-017: Perfil do Usuário — Backend
 - **Status:** Concluído
 - **Data:** 2026-03-18
@@ -400,4 +402,78 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/services/organizations/organizations.service.ts`
   - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
+
+## Fase 5: Convites
+
+### features/start US-023: Schema MongoDB — Invitations
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/aggregate/value-objects/invitation-id.vo.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/value-objects/invitation-status.vo.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/invitation.aggregate.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/invitation.aggregate.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/repositories/invitation.repository.ts`
+  - `formix-backend/src/modules/invitations/infra/schemas/invitation.schema.ts`
+  - `formix-backend/src/modules/invitations/infra/repositories/mongo-invitation.repository.ts`
+  - `formix-backend/src/modules/invitations/infra/repositories/mongo-invitation.repository.test.ts`
+  - `formix-backend/src/modules/invitations/invitations.module.ts`
+- **Verificação:** typecheck OK, testes OK (13 unit + 9 integration)
+
+### features/start US-024: Criar Convite — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/create-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/create-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/create-invitation.dto.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitation-response.dto.ts`
+- **Verificação:** typecheck OK, testes OK (5 unit)
+
+### features/start US-025: Aceitar Convite — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/accept-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/accept-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/accept-invitation.dto.ts`
+- **Verificação:** typecheck OK, testes OK (6 unit)
+
+### features/start US-026: Listar, Reenviar e Cancelar Convites — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/usecases/list-invitations.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/list-invitations.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/resend-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/resend-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/cancel-invitation.usecase.ts`
+  - `formix-backend/src/modules/invitations/domain/usecases/cancel-invitation.usecase.spec.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitations.controller.ts`
+  - `formix-backend/src/modules/invitations/infra/controllers/invitations.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/invitations/invitations.module.ts`
+  - `formix-backend/src/app.module.ts`
+- **Verificação:** typecheck OK, testes OK (11 unit + 17 integration)
+
+### features/start US-027: Tela de Convites — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/modules/InvitationsSection/InvitationsSection.tsx`
+  - `formix-frontend/src/modules/InvitationsSection/InviteModal.tsx`
+  - `formix-frontend/src/services/invitations/invitations.service.ts`
+  - `formix-frontend/src/services/invitations/invitations.types.ts`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-028: Tela de Aceite de Convite — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/app/(auth)/invite/page.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/invitations/invitations.service.ts`
 - **Verificação:** typecheck OK, build OK

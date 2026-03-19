@@ -6,10 +6,11 @@ import { EmailModule } from '@shared/email/email.module';
 import { UsersModule } from '@modules/users/users.module';
 import { OrganizationsModule } from '@modules/organizations/organizations.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { InvitationsModule } from '@modules/invitations/invitations.module';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
 
 @Module({
-  imports: [EnvironmentModule, DatabaseModule, EmailModule, UsersModule, OrganizationsModule, AuthModule],
+  imports: [EnvironmentModule, DatabaseModule, EmailModule, UsersModule, OrganizationsModule, AuthModule, InvitationsModule],
   providers: [
     {
       provide: APP_GUARD,
