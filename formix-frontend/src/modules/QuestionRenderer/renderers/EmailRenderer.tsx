@@ -1,0 +1,14 @@
+import { EmailInput } from '@/components/inputs';
+import type { RendererProps } from '../QuestionRenderer';
+
+export function EmailRenderer({ question, value, onChange, error }: RendererProps) {
+  return (
+    <EmailInput
+      label={question.label}
+      value={(value as string) ?? ''}
+      onChange={onChange}
+      required={question.required}
+      error={error}
+    />
+  );
+}
