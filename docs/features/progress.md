@@ -636,3 +636,36 @@
   - `formix-backend/src/modules/responses/infra/controllers/responses.controller.test.ts`
   - `formix-backend/src/modules/responses/responses.module.ts`
 - **Verificação:** typecheck OK, testes OK (4 unit + GET integration tests)
+
+### features/start US-040: Página Pública de Resposta — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/get-public-form.usecase.ts`
+  - `formix-frontend/src/services/responses/responses.types.ts`
+  - `formix-frontend/src/services/responses/responses.service.ts`
+  - `formix-frontend/src/modules/QuestionRenderer/QuestionRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/TextRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/TextareaRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/CheckboxRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/RadioRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/ToggleRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/DropdownRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/NumberRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/DateRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/RatingRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/FileRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/EmailRenderer.tsx`
+  - `formix-frontend/src/app/(public)/f/[publicToken]/page.tsx`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/forms.module.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.test.ts`
+- **Verificação:** typecheck OK, build OK (frontend), testes OK (backend)
+
+### features/start US-042: Visualizar Respostas — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/forms/[id]/responses/page.tsx`
+- **Verificação:** typecheck OK, build OK
