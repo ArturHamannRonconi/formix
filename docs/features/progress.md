@@ -571,3 +571,18 @@
 - **Arquivos modificados:**
   - `formix-frontend/src/app/(app)/forms/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-035: FormBuilder — Criar/Editar Formulário (Frontend)
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/hooks/useFormBuilder.ts`
+  - `formix-frontend/src/modules/FormBuilder/FormBuilder.tsx`
+  - `formix-frontend/src/modules/FormBuilder/QuestionList.tsx`
+  - `formix-frontend/src/modules/FormBuilder/QuestionEditor.tsx`
+  - `formix-frontend/src/modules/FormBuilder/QuestionTypeSelector.tsx`
+  - `formix-frontend/src/modules/FormBuilder/FormSettings.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/forms/new/page.tsx`
+  - `formix-frontend/src/app/(app)/forms/[id]/edit/page.tsx`
+- **Verificação:** typecheck OK, build OK
