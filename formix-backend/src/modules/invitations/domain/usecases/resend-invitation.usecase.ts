@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IInvitationRepository, INVITATION_REPOSITORY } from '../repositories/invitation.repository';
 import { InvitationId } from '../aggregate/value-objects/invitation-id.vo';
-import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@shared/email/email-service.interface';
+import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@providers/email/email.provider';
 import { Output } from '@shared/output';
 
 export const RESEND_INVITATION_EXPIRES_IN_MS = 'RESEND_INVITATION_EXPIRES_IN_MS';

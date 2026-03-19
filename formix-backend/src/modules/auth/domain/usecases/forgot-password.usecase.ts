@@ -3,7 +3,7 @@ import { IUserRepository, USER_REPOSITORY } from '@modules/users/domain/reposito
 import { PasswordResetTokenEntity } from '@modules/users/domain/aggregate/entities/password-reset-token.entity';
 import { Email } from '@shared/value-objects/email.vo';
 import { Output } from '@shared/output';
-import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@shared/email/email-service.interface';
+import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@providers/email/email.provider';
 
 export const FORGOT_PASSWORD_EXPIRES_IN_MS = 'FORGOT_PASSWORD_EXPIRES_IN_MS';
 export const FORGOT_PASSWORD_APP_URL = 'FORGOT_PASSWORD_APP_URL';
