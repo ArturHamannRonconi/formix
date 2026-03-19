@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -25,6 +26,8 @@ import { ListFormsUseCase } from '@modules/forms/domain/usecases/list-forms.usec
 import { GetFormUseCase } from '@modules/forms/domain/usecases/get-form.usecase';
 import { UpdateFormUseCase } from '@modules/forms/domain/usecases/update-form.usecase';
 import { DeleteFormUseCase } from '@modules/forms/domain/usecases/delete-form.usecase';
+import { PublishFormUseCase } from '@modules/forms/domain/usecases/publish-form.usecase';
+import { CloseFormUseCase } from '@modules/forms/domain/usecases/close-form.usecase';
 import { AddQuestionUseCase } from '@modules/forms/domain/usecases/add-question.usecase';
 import { UpdateQuestionUseCase } from '@modules/forms/domain/usecases/update-question.usecase';
 import { RemoveQuestionUseCase } from '@modules/forms/domain/usecases/remove-question.usecase';
@@ -39,6 +42,7 @@ import {
   GetFormResponseDto,
   ListFormsResponseDto,
 } from './form-response.dto';
+import { PublishFormResponseDto } from './publish-form-response.dto';
 
 @ApiTags('forms')
 @Controller('forms')
@@ -50,6 +54,8 @@ export class FormsController {
     private readonly getFormUseCase: GetFormUseCase,
     private readonly updateFormUseCase: UpdateFormUseCase,
     private readonly deleteFormUseCase: DeleteFormUseCase,
+    private readonly publishFormUseCase: PublishFormUseCase,
+    private readonly closeFormUseCase: CloseFormUseCase,
     private readonly addQuestionUseCase: AddQuestionUseCase,
     private readonly updateQuestionUseCase: UpdateQuestionUseCase,
     private readonly removeQuestionUseCase: RemoveQuestionUseCase,
@@ -187,6 +193,62 @@ export class FormsController {
     }
 
     return output.value;
+  }
+
+  @Post(':id/publish')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Publish a form (draft → active)' })
+  @ApiParam({ name: 'id', description: 'Form ID' })
+  @ApiResponse({ status: 200, description: 'Form published', type: PublishFormResponseDto })
+  @ApiResponse({ status: 400, description: 'Form has no questions or is not in draft status' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  async publishForm(
+    @Param('id') id: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<PublishFormResponseDto> {
+    const output = await this.publishFormUseCase.execute({
+      organizationId: user.organizationId,
+      formId: id,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value;
+  }
+
+  @Post(':id/close')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Close a form (active → closed)' })
+  @ApiParam({ name: 'id', description: 'Form ID' })
+  @ApiResponse({ status: 200, description: 'Form closed' })
+  @ApiResponse({ status: 400, description: 'Form is not active' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  async closeForm(
+    @Param('id') id: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ closed: true }> {
+    const output = await this.closeFormUseCase.execute({
+      organizationId: user.organizationId,
+      formId: id,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value as { closed: true };
   }
 
   @Post(':formId/questions')

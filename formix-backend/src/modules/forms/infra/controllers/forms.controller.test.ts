@@ -18,6 +18,8 @@ import { AddQuestionUseCase } from '@modules/forms/domain/usecases/add-question.
 import { UpdateQuestionUseCase } from '@modules/forms/domain/usecases/update-question.usecase';
 import { RemoveQuestionUseCase } from '@modules/forms/domain/usecases/remove-question.usecase';
 import { ReorderQuestionsUseCase } from '@modules/forms/domain/usecases/reorder-questions.usecase';
+import { PublishFormUseCase } from '@modules/forms/domain/usecases/publish-form.usecase';
+import { CloseFormUseCase } from '@modules/forms/domain/usecases/close-form.usecase';
 import { MongoFormRepository } from '../repositories/mongo-form.repository';
 import { MongoQuestionRepository } from '../repositories/mongo-question.repository';
 import { FORM_REPOSITORY } from '@modules/forms/domain/repositories/form.repository';
@@ -63,6 +65,8 @@ describe('FormsController (integration)', () => {
         UpdateQuestionUseCase,
         RemoveQuestionUseCase,
         ReorderQuestionsUseCase,
+        PublishFormUseCase,
+        CloseFormUseCase,
         { provide: FORM_REPOSITORY, useClass: MongoFormRepository },
         { provide: QUESTION_REPOSITORY, useClass: MongoQuestionRepository },
         JwtStrategy,
@@ -355,6 +359,111 @@ describe('FormsController (integration)', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.reordered).toBe(true);
+    });
+  });
+
+  describe('POST /forms/:id/publish', () => {
+    it('should publish form with questions (200)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form to Publish' });
+
+      const formId = createFormRes.body.formId;
+
+      await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'What is your name?', required: false });
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/publish`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.publicToken).toBeDefined();
+      expect(res.body.publicUrl).toContain(res.body.publicToken);
+    });
+
+    it('should return 400 when form has no questions', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form Without Questions' });
+
+      const formId = createFormRes.body.formId;
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/publish`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    it('should return 400 when form is already active', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form Already Active' });
+
+      const formId = createFormRes.body.formId;
+
+      await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'A question', required: false });
+
+      await request(app.getHttpServer())
+        .post(`/forms/${formId}/publish`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/publish`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('POST /forms/:id/close', () => {
+    it('should close active form (200)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form to Close' });
+
+      const formId = createFormRes.body.formId;
+
+      await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'A question', required: false });
+
+      await request(app.getHttpServer())
+        .post(`/forms/${formId}/publish`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/close`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.closed).toBe(true);
+    });
+
+    it('should return 400 when form is not active (draft)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Draft Form Close Attempt' });
+
+      const formId = createFormRes.body.formId;
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/close`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(400);
     });
   });
 });
