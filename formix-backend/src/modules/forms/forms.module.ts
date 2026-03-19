@@ -17,6 +17,7 @@ import { RemoveQuestionUseCase } from './domain/usecases/remove-question.usecase
 import { ReorderQuestionsUseCase } from './domain/usecases/reorder-questions.usecase';
 import { PublishFormUseCase } from './domain/usecases/publish-form.usecase';
 import { CloseFormUseCase } from './domain/usecases/close-form.usecase';
+import { GetPublicFormUseCase } from './domain/usecases/get-public-form.usecase';
 import { FormsController } from './infra/controllers/forms.controller';
 
 @Module({
@@ -41,7 +42,8 @@ import { FormsController } from './infra/controllers/forms.controller';
     ReorderQuestionsUseCase,
     PublishFormUseCase,
     CloseFormUseCase,
+    GetPublicFormUseCase,
   ],
-  exports: [FORM_REPOSITORY, QUESTION_REPOSITORY],
+  exports: [FORM_REPOSITORY, QUESTION_REPOSITORY, GetPublicFormUseCase],
 })
 export class FormsModule {}

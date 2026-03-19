@@ -588,3 +588,84 @@
   - `formix-frontend/src/app/(app)/forms/new/page.tsx`
   - `formix-frontend/src/app/(app)/forms/[id]/edit/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+### features/start US-038: Schemas MongoDB — Responses e Response_Emails
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/responses/domain/aggregate/value-objects/response-id.vo.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/value-objects/response-email-id.vo.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response.aggregate.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response.aggregate.spec.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response-email.aggregate.ts`
+  - `formix-backend/src/modules/responses/domain/aggregate/response-email.aggregate.spec.ts`
+  - `formix-backend/src/modules/responses/domain/repositories/response.repository.ts`
+  - `formix-backend/src/modules/responses/domain/repositories/response-email.repository.ts`
+  - `formix-backend/src/modules/responses/infra/schemas/response.schema.ts`
+  - `formix-backend/src/modules/responses/infra/schemas/response-email.schema.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response.repository.test.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response-email.repository.ts`
+  - `formix-backend/src/modules/responses/infra/repositories/mongo-response-email.repository.test.ts`
+  - `formix-backend/src/modules/responses/responses.module.ts`
+- **Verificação:** typecheck OK, testes OK (10 unit + 8 integration)
+
+### features/start US-039: Submeter Resposta — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/responses/domain/usecases/submit-response.usecase.ts`
+  - `formix-backend/src/modules/responses/domain/usecases/submit-response.usecase.spec.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/submit-response.dto.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/domain/usecases/delete-form.usecase.ts` (cascata)
+  - `formix-backend/src/modules/responses/responses.module.ts`
+  - `formix-backend/src/app.module.ts`
+- **Verificação:** typecheck OK, testes OK (9 unit + 8 integration)
+
+### features/start US-041: Visualizar Respostas de um Formulário — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/responses/domain/usecases/list-responses.usecase.ts`
+  - `formix-backend/src/modules/responses/domain/usecases/list-responses.usecase.spec.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.test.ts`
+  - `formix-backend/src/modules/responses/responses.module.ts`
+- **Verificação:** typecheck OK, testes OK (4 unit + GET integration tests)
+
+### features/start US-040: Página Pública de Resposta — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/get-public-form.usecase.ts`
+  - `formix-frontend/src/services/responses/responses.types.ts`
+  - `formix-frontend/src/services/responses/responses.service.ts`
+  - `formix-frontend/src/modules/QuestionRenderer/QuestionRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/TextRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/TextareaRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/CheckboxRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/RadioRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/ToggleRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/DropdownRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/NumberRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/DateRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/RatingRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/FileRenderer.tsx`
+  - `formix-frontend/src/modules/QuestionRenderer/renderers/EmailRenderer.tsx`
+  - `formix-frontend/src/app/(public)/f/[publicToken]/page.tsx`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/forms.module.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.ts`
+  - `formix-backend/src/modules/responses/infra/controllers/responses.controller.test.ts`
+- **Verificação:** typecheck OK, build OK (frontend), testes OK (backend)
+
+### features/start US-042: Visualizar Respostas — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/forms/[id]/responses/page.tsx`
+- **Verificação:** typecheck OK, build OK
