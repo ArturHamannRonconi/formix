@@ -403,3 +403,20 @@
   - `formix-frontend/src/services/organizations/organizations.service.ts`
   - `formix-frontend/src/app/(app)/settings/members/page.tsx`
 - **Verificação:** typecheck OK, build OK
+
+## Fase 5: Convites
+
+### features/start US-023: Schema MongoDB — Invitations
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/invitations/domain/aggregate/value-objects/invitation-id.vo.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/value-objects/invitation-status.vo.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/invitation.aggregate.ts`
+  - `formix-backend/src/modules/invitations/domain/aggregate/invitation.aggregate.spec.ts`
+  - `formix-backend/src/modules/invitations/domain/repositories/invitation.repository.ts`
+  - `formix-backend/src/modules/invitations/infra/schemas/invitation.schema.ts`
+  - `formix-backend/src/modules/invitations/infra/repositories/mongo-invitation.repository.ts`
+  - `formix-backend/src/modules/invitations/infra/repositories/mongo-invitation.repository.test.ts`
+  - `formix-backend/src/modules/invitations/invitations.module.ts`
+- **Verificação:** typecheck OK, testes OK (13 unit + 9 integration)
