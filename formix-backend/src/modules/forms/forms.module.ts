@@ -6,6 +6,12 @@ import { MongoFormRepository } from './infra/repositories/mongo-form.repository'
 import { MongoQuestionRepository } from './infra/repositories/mongo-question.repository';
 import { FORM_REPOSITORY } from './domain/repositories/form.repository';
 import { QUESTION_REPOSITORY } from './domain/repositories/question.repository';
+import { CreateFormUseCase } from './domain/usecases/create-form.usecase';
+import { ListFormsUseCase } from './domain/usecases/list-forms.usecase';
+import { GetFormUseCase } from './domain/usecases/get-form.usecase';
+import { UpdateFormUseCase } from './domain/usecases/update-form.usecase';
+import { DeleteFormUseCase } from './domain/usecases/delete-form.usecase';
+import { FormsController } from './infra/controllers/forms.controller';
 
 @Module({
   imports: [
@@ -14,10 +20,15 @@ import { QUESTION_REPOSITORY } from './domain/repositories/question.repository';
       { name: QuestionSchemaClass.name, schema: QuestionSchema },
     ]),
   ],
-  controllers: [],
+  controllers: [FormsController],
   providers: [
     { provide: FORM_REPOSITORY, useClass: MongoFormRepository },
     { provide: QUESTION_REPOSITORY, useClass: MongoQuestionRepository },
+    CreateFormUseCase,
+    ListFormsUseCase,
+    GetFormUseCase,
+    UpdateFormUseCase,
+    DeleteFormUseCase,
   ],
   exports: [FORM_REPOSITORY, QUESTION_REPOSITORY],
 })
