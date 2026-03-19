@@ -21,7 +21,8 @@
       "@modules/*": ["src/modules/*"],
       "@core/*": ["src/core/*"],
       "@shared/*": ["src/shared/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@providers/*": ["src/providers/*"]
     }
   }
 }

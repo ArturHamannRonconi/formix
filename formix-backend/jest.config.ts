@@ -15,6 +15,7 @@ const config: Config = {
     '^@core/(.*)$': '<rootDir>/core/$1',
     '^@shared/(.*)$': '<rootDir>/shared/$1',
     '^@utils/(.*)$': '<rootDir>/utils/$1',
+    '^@providers/(.*)$': '<rootDir>/providers/$1',
   },
 };
 
