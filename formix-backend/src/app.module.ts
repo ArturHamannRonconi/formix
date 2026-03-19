@@ -8,10 +8,11 @@ import { OrganizationsModule } from '@modules/organizations/organizations.module
 import { AuthModule } from '@modules/auth/auth.module';
 import { InvitationsModule } from '@modules/invitations/invitations.module';
 import { FormsModule } from '@modules/forms/forms.module';
+import { ResponsesModule } from '@modules/responses/responses.module';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
 
 @Module({
-  imports: [EnvironmentModule, DatabaseModule, EmailModule, UsersModule, OrganizationsModule, AuthModule, InvitationsModule, FormsModule],
+  imports: [EnvironmentModule, DatabaseModule, EmailModule, UsersModule, OrganizationsModule, AuthModule, InvitationsModule, FormsModule, ResponsesModule],
   providers: [
     {
       provide: APP_GUARD,
