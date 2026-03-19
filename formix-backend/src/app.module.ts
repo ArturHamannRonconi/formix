@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { EnvironmentModule } from '@core/environment/environment.module';
 import { DatabaseModule } from '@core/database/database.module';
-import { EmailModule } from '@shared/email/email.module';
+import { EmailModule } from '@providers/email/email.module';
 import { UsersModule } from '@modules/users/users.module';
 import { OrganizationsModule } from '@modules/organizations/organizations.module';
 import { AuthModule } from '@modules/auth/auth.module';

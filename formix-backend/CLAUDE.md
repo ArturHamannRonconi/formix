@@ -13,6 +13,9 @@
 ```
 src/
   modules/          # Módulos de domínio (DDD)
+  providers/        # Integrações com serviços externos (email, pagamento, SMS, storage…)
+    email/          # Ex: console-email, sendgrid-email
+    payment/        # Ex: stripe-gateway, pagarme-gateway
   core/             # Infraestrutura central
     database/       # Configuração e conexão com MongoDB
     environment/    # Variáveis de ambiente e configuração
@@ -47,6 +50,30 @@ Regras:
 - Repositórios implementam as interfaces definidas no domain
 - Schemas definem a estrutura do MongoDB
 - Configuração de banco fica em `src/core/database/`, não dentro do módulo
+
+## Providers (`src/providers/`)
+
+Integrações com serviços externos que a aplicação **não controla e não pode depender diretamente**. Todo serviço terceiro com múltiplas implementações possíveis vai aqui.
+
+Exemplos: serviço de email (SendGrid, SES, console), gateway de pagamento (Stripe, PagarMe), SMS, storage.
+
+**Padrão obrigatório:**
+- O domínio (ou `shared/`) define a **interface** (port) — ex: `IEmailService`
+- O provider implementa essa interface — ex: `SendgridEmailService`
+- O módulo injeta a implementação via NestJS DI — **nunca importa o provider diretamente**
+
+```
+providers/
+  email/
+    interfaces/           # IEmailService
+    console-email/        # Implementação de dev (log no console)
+    sendgrid-email/       # Implementação de produção
+  payment/
+    interfaces/           # IPaymentGateway
+    stripe-gateway/
+```
+
+**O que NÃO vai em providers/:** banco de dados (vai em `core/database/`), lógica de negócio.
 
 ## Módulos
 

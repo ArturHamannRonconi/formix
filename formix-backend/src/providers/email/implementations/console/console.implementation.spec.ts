@@ -1,5 +1,5 @@
-import { ConsoleEmailService } from './console-email.service';
-import { EmailTemplate } from './email-service.interface';
+import { ConsoleEmailService } from './console.implementation';
+import { EmailTemplate } from '@providers/email/email.provider';
 
 describe('ConsoleEmailService', () => {
   let service: ConsoleEmailService;

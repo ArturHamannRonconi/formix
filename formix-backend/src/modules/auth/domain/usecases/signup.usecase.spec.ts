@@ -1,7 +1,7 @@
 import { SignupUseCase } from './signup.usecase';
 import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { IOrganizationRepository } from '@modules/organizations/domain/repositories/organization.repository';
-import { IEmailService, EmailTemplate } from '@shared/email/email-service.interface';
+import { IEmailService, EmailTemplate } from '@providers/email/email.provider';
 
 describe('SignupUseCase', () => {
   let usecase: SignupUseCase;

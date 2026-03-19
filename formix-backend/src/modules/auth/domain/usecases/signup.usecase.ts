@@ -11,7 +11,7 @@ import { Slug } from '@modules/organizations/domain/aggregate/value-objects/slug
 import { Email } from '@shared/value-objects/email.vo';
 import { Password } from '@shared/value-objects/password.vo';
 import { Output } from '@shared/output';
-import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@shared/email/email-service.interface';
+import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@providers/email/email.provider';
 
 export const JWT_SIGN_FUNCTION = 'JWT_SIGN_FUNCTION';
 export const EMAIL_CONFIRMATION_EXPIRES_IN_MS = 'EMAIL_CONFIRMATION_EXPIRES_IN_MS';

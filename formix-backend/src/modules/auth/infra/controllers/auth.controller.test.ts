@@ -44,7 +44,7 @@ import { USER_REPOSITORY } from '@modules/users/domain/repositories/user.reposit
 import { OrganizationSchemaClass, OrganizationSchema } from '@modules/organizations/infra/schemas/organization.schema';
 import { MongoOrganizationRepository } from '@modules/organizations/infra/repositories/mongo-organization.repository';
 import { ORGANIZATION_REPOSITORY } from '@modules/organizations/domain/repositories/organization.repository';
-import { EMAIL_SERVICE } from '@shared/email/email-service.interface';
+import { EMAIL_SERVICE } from '@providers/email/email.provider';
 
 describe('AuthController (integration)', () => {
   let mongod: MongoMemoryServer;

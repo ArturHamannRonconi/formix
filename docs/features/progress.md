@@ -478,6 +478,8 @@
   - `formix-frontend/src/services/invitations/invitations.service.ts`
 - **Verificação:** typecheck OK, build OK
 
+## Fase 6: Formulários
+
 ### features/start US-029: Schemas MongoDB — Forms e Questions
 - **Status:** Concluído
 - **Data:** 2026-03-19

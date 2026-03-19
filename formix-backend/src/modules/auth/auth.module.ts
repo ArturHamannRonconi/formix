@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '@modules/users/users.module';
 import { OrganizationsModule } from '@modules/organizations/organizations.module';
-import { EmailModule } from '@shared/email/email.module';
+import { EmailModule } from '@providers/email/email.module';
 import { AuthController } from './infra/controllers/auth.controller';
 import {
   SignupUseCase,

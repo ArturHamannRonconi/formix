@@ -13,7 +13,7 @@ import { CancelInvitationUseCase } from './domain/usecases/cancel-invitation.use
 import { InvitationsController } from './infra/controllers/invitations.controller';
 import { UsersModule } from '@modules/users/users.module';
 import { OrganizationsModule } from '@modules/organizations/organizations.module';
-import { EmailModule } from '@shared/email/email.module';
+import { EmailModule } from '@providers/email/email.module';
 
 @Module({
   imports: [

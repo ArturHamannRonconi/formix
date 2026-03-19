@@ -9,7 +9,7 @@ import { IUserRepository, USER_REPOSITORY } from '@modules/users/domain/reposito
 import { OrganizationId } from '@modules/organizations/domain/aggregate/value-objects/organization-id.vo';
 import { Email } from '@shared/value-objects/email.vo';
 import { Output } from '@shared/output';
-import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@shared/email/email-service.interface';
+import { IEmailService, EMAIL_SERVICE, EmailTemplate } from '@providers/email/email.provider';
 
 export const INVITATION_EXPIRES_IN_MS = 'INVITATION_EXPIRES_IN_MS';
 export const INVITATION_APP_URL = 'INVITATION_APP_URL';

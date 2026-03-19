@@ -23,7 +23,6 @@ Estrutura do backend:
 src/
   modules/      → Módulos de domínio (cada um com domain/ e infra/)
   core/         → database/, environment/
-  server/       → middlewares/, routes/
   shared/       → Código compartilhado entre módulos
   utils/        → Utilitários genéricos
 ```
