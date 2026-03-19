@@ -23,6 +23,7 @@ import { Public } from '@modules/auth/infra/decorators/public.decorator';
 import { CurrentUser, JwtPayload } from '@modules/auth/infra/decorators/current-user.decorator';
 import { SubmitResponseUseCase } from '@modules/responses/domain/usecases/submit-response.usecase';
 import { ListResponsesUseCase } from '@modules/responses/domain/usecases/list-responses.usecase';
+import { GetPublicFormUseCase } from '@modules/forms/domain/usecases/get-public-form.usecase';
 import { SubmitResponseDto, SubmitResponseResponseDto } from './submit-response.dto';
 
 @ApiTags('responses')
@@ -31,7 +32,20 @@ export class ResponsesController {
   constructor(
     private readonly submitResponseUseCase: SubmitResponseUseCase,
     private readonly listResponsesUseCase: ListResponsesUseCase,
+    private readonly getPublicFormUseCase: GetPublicFormUseCase,
   ) {}
+
+  @Get('forms/public/:publicToken')
+  @Public()
+  @ApiOperation({ summary: 'Get public form data by public token' })
+  @ApiParam({ name: 'publicToken', description: 'Public token of the form' })
+  @ApiResponse({ status: 200, description: 'Public form data with questions' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  async getPublicForm(@Param('publicToken') publicToken: string) {
+    const output = await this.getPublicFormUseCase.execute(publicToken);
+    if (output.isFailure) throw new NotFoundException(output.errorMessage);
+    return output.value;
+  }
 
   @Post('responses/:publicToken')
   @Public()

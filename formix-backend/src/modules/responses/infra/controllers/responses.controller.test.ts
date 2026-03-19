@@ -11,6 +11,7 @@ import * as request from 'supertest';
 import { ResponsesController } from './responses.controller';
 import { SubmitResponseUseCase } from '@modules/responses/domain/usecases/submit-response.usecase';
 import { ListResponsesUseCase } from '@modules/responses/domain/usecases/list-responses.usecase';
+import { GetPublicFormUseCase } from '@modules/forms/domain/usecases/get-public-form.usecase';
 import { MongoResponseRepository } from '../repositories/mongo-response.repository';
 import { MongoResponseEmailRepository } from '../repositories/mongo-response-email.repository';
 import { MongoFormRepository } from '@modules/forms/infra/repositories/mongo-form.repository';
@@ -60,6 +61,7 @@ describe('ResponsesController (integration)', () => {
       providers: [
         SubmitResponseUseCase,
         ListResponsesUseCase,
+        GetPublicFormUseCase,
         { provide: RESPONSE_REPOSITORY, useClass: MongoResponseRepository },
         { provide: RESPONSE_EMAIL_REPOSITORY, useClass: MongoResponseEmailRepository },
         { provide: FORM_REPOSITORY, useClass: MongoFormRepository },
