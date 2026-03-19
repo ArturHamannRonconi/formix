@@ -501,3 +501,21 @@
   - `formix-backend/src/modules/forms/infra/repositories/mongo-question.repository.test.ts`
   - `formix-backend/src/modules/forms/forms.module.ts`
 - **Verificação:** typecheck OK, testes OK (21 unit + 15 integration)
+
+### features/start US-030: CRUD de Formulários — Backend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-backend/src/modules/forms/domain/usecases/create-form.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/list-forms.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/get-form.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/update-form.usecase.ts`
+  - `formix-backend/src/modules/forms/domain/usecases/delete-form.usecase.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/create-form.dto.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/update-form.dto.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/form-response.dto.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.ts`
+  - `formix-backend/src/modules/forms/infra/controllers/forms.controller.test.ts`
+- **Arquivos modificados:**
+  - `formix-backend/src/modules/forms/forms.module.ts`
+- **Verificação:** typecheck OK, testes OK (17 unit + 11 integration)
