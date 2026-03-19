@@ -25,8 +25,15 @@ import { ListFormsUseCase } from '@modules/forms/domain/usecases/list-forms.usec
 import { GetFormUseCase } from '@modules/forms/domain/usecases/get-form.usecase';
 import { UpdateFormUseCase } from '@modules/forms/domain/usecases/update-form.usecase';
 import { DeleteFormUseCase } from '@modules/forms/domain/usecases/delete-form.usecase';
+import { AddQuestionUseCase } from '@modules/forms/domain/usecases/add-question.usecase';
+import { UpdateQuestionUseCase } from '@modules/forms/domain/usecases/update-question.usecase';
+import { RemoveQuestionUseCase } from '@modules/forms/domain/usecases/remove-question.usecase';
+import { ReorderQuestionsUseCase } from '@modules/forms/domain/usecases/reorder-questions.usecase';
 import { CreateFormDto } from './create-form.dto';
 import { UpdateFormDto } from './update-form.dto';
+import { AddQuestionDto } from './add-question.dto';
+import { UpdateQuestionDto } from './update-question.dto';
+import { ReorderQuestionsDto } from './reorder-questions.dto';
 import {
   CreateFormResponseDto,
   GetFormResponseDto,
@@ -43,6 +50,10 @@ export class FormsController {
     private readonly getFormUseCase: GetFormUseCase,
     private readonly updateFormUseCase: UpdateFormUseCase,
     private readonly deleteFormUseCase: DeleteFormUseCase,
+    private readonly addQuestionUseCase: AddQuestionUseCase,
+    private readonly updateQuestionUseCase: UpdateQuestionUseCase,
+    private readonly removeQuestionUseCase: RemoveQuestionUseCase,
+    private readonly reorderQuestionsUseCase: ReorderQuestionsUseCase,
   ) {}
 
   @Post()
@@ -170,6 +181,133 @@ export class FormsController {
 
     if (output.isFailure) {
       if (output.errorMessage === 'Form not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value;
+  }
+
+  @Post(':formId/questions')
+  @ApiOperation({ summary: 'Add a question to a form' })
+  @ApiParam({ name: 'formId', description: 'Form ID' })
+  @ApiBody({ type: AddQuestionDto })
+  @ApiResponse({ status: 201, description: 'Question added successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  async addQuestion(
+    @Param('formId') formId: string,
+    @Body() dto: AddQuestionDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ questionId: string }> {
+    const output = await this.addQuestionUseCase.execute({
+      organizationId: user.organizationId,
+      formId,
+      type: dto.type,
+      label: dto.label,
+      description: dto.description,
+      required: dto.required,
+      options: dto.options,
+      validation: dto.validation,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value;
+  }
+
+  @Patch(':formId/questions/reorder')
+  @ApiOperation({ summary: 'Reorder questions in a form' })
+  @ApiParam({ name: 'formId', description: 'Form ID' })
+  @ApiBody({ type: ReorderQuestionsDto })
+  @ApiResponse({ status: 200, description: 'Questions reordered successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form or question not found' })
+  async reorderQuestions(
+    @Param('formId') formId: string,
+    @Body() dto: ReorderQuestionsDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ reordered: boolean }> {
+    const output = await this.reorderQuestionsUseCase.execute({
+      organizationId: user.organizationId,
+      formId,
+      questions: dto.questions,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found' || output.errorMessage === 'Question not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value;
+  }
+
+  @Patch(':formId/questions/:questionId')
+  @ApiOperation({ summary: 'Update a question' })
+  @ApiParam({ name: 'formId', description: 'Form ID' })
+  @ApiParam({ name: 'questionId', description: 'Question ID' })
+  @ApiBody({ type: UpdateQuestionDto })
+  @ApiResponse({ status: 200, description: 'Question updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form or question not found' })
+  async updateQuestion(
+    @Param('formId') formId: string,
+    @Param('questionId') questionId: string,
+    @Body() dto: UpdateQuestionDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ updated: boolean }> {
+    const output = await this.updateQuestionUseCase.execute({
+      organizationId: user.organizationId,
+      formId,
+      questionId,
+      label: dto.label,
+      description: dto.description,
+      required: dto.required,
+      options: dto.options,
+      validation: dto.validation,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found' || output.errorMessage === 'Question not found') {
+        throw new NotFoundException(output.errorMessage);
+      }
+      throw new BadRequestException(output.errorMessage);
+    }
+
+    return output.value;
+  }
+
+  @Delete(':formId/questions/:questionId')
+  @ApiOperation({ summary: 'Remove a question from a form' })
+  @ApiParam({ name: 'formId', description: 'Form ID' })
+  @ApiParam({ name: 'questionId', description: 'Question ID' })
+  @ApiResponse({ status: 200, description: 'Question removed successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form or question not found' })
+  async removeQuestion(
+    @Param('formId') formId: string,
+    @Param('questionId') questionId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ removed: boolean }> {
+    const output = await this.removeQuestionUseCase.execute({
+      organizationId: user.organizationId,
+      formId,
+      questionId,
+    });
+
+    if (output.isFailure) {
+      if (output.errorMessage === 'Form not found' || output.errorMessage === 'Question not found') {
         throw new NotFoundException(output.errorMessage);
       }
       throw new BadRequestException(output.errorMessage);

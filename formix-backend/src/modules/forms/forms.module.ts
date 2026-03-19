@@ -11,6 +11,10 @@ import { ListFormsUseCase } from './domain/usecases/list-forms.usecase';
 import { GetFormUseCase } from './domain/usecases/get-form.usecase';
 import { UpdateFormUseCase } from './domain/usecases/update-form.usecase';
 import { DeleteFormUseCase } from './domain/usecases/delete-form.usecase';
+import { AddQuestionUseCase } from './domain/usecases/add-question.usecase';
+import { UpdateQuestionUseCase } from './domain/usecases/update-question.usecase';
+import { RemoveQuestionUseCase } from './domain/usecases/remove-question.usecase';
+import { ReorderQuestionsUseCase } from './domain/usecases/reorder-questions.usecase';
 import { FormsController } from './infra/controllers/forms.controller';
 
 @Module({
@@ -29,6 +33,10 @@ import { FormsController } from './infra/controllers/forms.controller';
     GetFormUseCase,
     UpdateFormUseCase,
     DeleteFormUseCase,
+    AddQuestionUseCase,
+    UpdateQuestionUseCase,
+    RemoveQuestionUseCase,
+    ReorderQuestionsUseCase,
   ],
   exports: [FORM_REPOSITORY, QUESTION_REPOSITORY],
 })

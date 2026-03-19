@@ -14,6 +14,10 @@ import { ListFormsUseCase } from '@modules/forms/domain/usecases/list-forms.usec
 import { GetFormUseCase } from '@modules/forms/domain/usecases/get-form.usecase';
 import { UpdateFormUseCase } from '@modules/forms/domain/usecases/update-form.usecase';
 import { DeleteFormUseCase } from '@modules/forms/domain/usecases/delete-form.usecase';
+import { AddQuestionUseCase } from '@modules/forms/domain/usecases/add-question.usecase';
+import { UpdateQuestionUseCase } from '@modules/forms/domain/usecases/update-question.usecase';
+import { RemoveQuestionUseCase } from '@modules/forms/domain/usecases/remove-question.usecase';
+import { ReorderQuestionsUseCase } from '@modules/forms/domain/usecases/reorder-questions.usecase';
 import { MongoFormRepository } from '../repositories/mongo-form.repository';
 import { MongoQuestionRepository } from '../repositories/mongo-question.repository';
 import { FORM_REPOSITORY } from '@modules/forms/domain/repositories/form.repository';
@@ -55,6 +59,10 @@ describe('FormsController (integration)', () => {
         GetFormUseCase,
         UpdateFormUseCase,
         DeleteFormUseCase,
+        AddQuestionUseCase,
+        UpdateQuestionUseCase,
+        RemoveQuestionUseCase,
+        ReorderQuestionsUseCase,
         { provide: FORM_REPOSITORY, useClass: MongoFormRepository },
         { provide: QUESTION_REPOSITORY, useClass: MongoQuestionRepository },
         JwtStrategy,
@@ -227,6 +235,126 @@ describe('FormsController (integration)', () => {
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(res.status).toBe(404);
+    });
+  });
+
+  describe('POST /forms/:formId/questions', () => {
+    it('should create question (201)', async () => {
+      const createRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form With Questions' });
+
+      const formId = createRes.body.formId;
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'Your name', required: false });
+
+      expect(res.status).toBe(201);
+      expect(res.body.questionId).toBeDefined();
+    });
+
+    it('should return 400 for radio type without options', async () => {
+      const createRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form for Radio Test' });
+
+      const formId = createRes.body.formId;
+
+      const res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'radio', label: 'Pick one', required: true });
+
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('PATCH /forms/:formId/questions/:questionId', () => {
+    it('should update question (200)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form for Update Question' });
+
+      const formId = createFormRes.body.formId;
+
+      const createQRes = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'Old label', required: false });
+
+      const questionId = createQRes.body.questionId;
+
+      const res = await request(app.getHttpServer())
+        .patch(`/forms/${formId}/questions/${questionId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ label: 'New label' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.updated).toBe(true);
+    });
+  });
+
+  describe('DELETE /forms/:formId/questions/:questionId', () => {
+    it('should remove question (200)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form for Remove Question' });
+
+      const formId = createFormRes.body.formId;
+
+      const createQRes = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'Question to delete', required: false });
+
+      const questionId = createQRes.body.questionId;
+
+      const res = await request(app.getHttpServer())
+        .delete(`/forms/${formId}/questions/${questionId}`)
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.removed).toBe(true);
+    });
+  });
+
+  describe('PATCH /forms/:formId/questions/reorder', () => {
+    it('should reorder questions (200)', async () => {
+      const createFormRes = await request(app.getHttpServer())
+        .post('/forms')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ title: 'Form for Reorder' });
+
+      const formId = createFormRes.body.formId;
+
+      const q1Res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'Question 1', required: false });
+
+      const q2Res = await request(app.getHttpServer())
+        .post(`/forms/${formId}/questions`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ type: 'text', label: 'Question 2', required: false });
+
+      const res = await request(app.getHttpServer())
+        .patch(`/forms/${formId}/questions/reorder`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          questions: [
+            { id: q1Res.body.questionId, order: 1 },
+            { id: q2Res.body.questionId, order: 0 },
+          ],
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.reordered).toBe(true);
     });
   });
 });
