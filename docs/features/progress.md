@@ -456,3 +456,24 @@
   - `formix-backend/src/modules/invitations/invitations.module.ts`
   - `formix-backend/src/app.module.ts`
 - **Verificação:** typecheck OK, testes OK (11 unit + 17 integration)
+
+### features/start US-027: Tela de Convites — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/modules/InvitationsSection/InvitationsSection.tsx`
+  - `formix-frontend/src/modules/InvitationsSection/InviteModal.tsx`
+  - `formix-frontend/src/services/invitations/invitations.service.ts`
+  - `formix-frontend/src/services/invitations/invitations.types.ts`
+- **Arquivos modificados:**
+  - `formix-frontend/src/app/(app)/settings/members/page.tsx`
+- **Verificação:** typecheck OK, build OK
+
+### features/start US-028: Tela de Aceite de Convite — Frontend
+- **Status:** Concluído
+- **Data:** 2026-03-19
+- **Arquivos criados:**
+  - `formix-frontend/src/app/(auth)/invite/page.tsx`
+- **Arquivos modificados:**
+  - `formix-frontend/src/services/invitations/invitations.service.ts`
+- **Verificação:** typecheck OK, build OK
