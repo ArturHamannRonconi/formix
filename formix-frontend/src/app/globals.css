@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: #ffffff;
   --color-foreground: #0f172a;
@@ -52,7 +55,7 @@
   }
 }
 
-/* shadcn/ui CSS variable compatibility layer */
+/* shadcn/ui CSS variable compatibility layer — light */
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 47.4% 11.2%;
@@ -74,4 +77,47 @@
   --input: 214.3 31.8% 91.4%;
   --ring: 245 58% 61%;
   --radius: 0.5rem;
+}
+
+/* shadcn/ui CSS variable compatibility layer — dark */
+.dark {
+  /* Tailwind theme overrides */
+  --color-background: #0f172a;
+  --color-foreground: #f8fafc;
+  --color-primary: #818cf8;
+  --color-primary-foreground: #1e1b4b;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f8fafc;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f8fafc;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-card: #1e293b;
+  --color-card-foreground: #f8fafc;
+  --color-border: #334155;
+  --color-input: #334155;
+  --color-ring: #818cf8;
+
+  /* shadcn/ui HSL overrides */
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 217.2 32.6% 12%;
+  --card-foreground: 210 40% 98%;
+  --popover: 217.2 32.6% 12%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 240 100% 14%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 217.2 32.6% 25%;
+  --input: 217.2 32.6% 25%;
+  --ring: 239 84% 67%;
 }

@@ -29,17 +29,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
       <nav
         className={`
-          fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 text-slate-100 flex flex-col
+          fixed inset-y-0 left-0 z-50 w-64 bg-secondary text-secondary-foreground flex flex-col
           transform transition-transform duration-200 ease-in-out
           md:relative md:translate-x-0 md:z-auto md:flex md:min-h-0
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
         aria-label="Navegação principal"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <span className="text-xl font-bold text-white tracking-tight">Formix</span>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <span className="text-xl font-bold text-foreground tracking-tight">Formix</span>
           <button
-            className="md:hidden p-1 rounded hover:bg-slate-800 transition-colors"
+            className="md:hidden p-1 rounded hover:bg-accent transition-colors"
             onClick={onClose}
             aria-label="Fechar menu"
           >
@@ -57,8 +57,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   className={`
                     flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors
                     ${isActive
-                      ? 'bg-violet-600/20 text-violet-300'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+                      ? 'bg-primary/20 text-primary'
+                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                     }
                   `}
                   aria-current={isActive ? 'page' : undefined}

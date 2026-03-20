@@ -7,11 +7,11 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-foreground);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
   margin-left: 2px;
 }
 
@@ -39,7 +39,7 @@
 .track {
   position: absolute;
   inset: 0;
-  background: #d1d5db;
+  background: var(--color-border);
   border-radius: 24px;
   transition: background 0.2s;
   cursor: pointer;
@@ -59,7 +59,7 @@
 }
 
 .input:checked + .track {
-  background: #7c6af7;
+  background: var(--color-primary);
 }
 
 .input:checked + .track::after {
@@ -67,7 +67,7 @@
 }
 
 .input:focus-visible + .track {
-  outline: 2px solid #7c6af7;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -78,10 +78,10 @@
 
 .switchLabel {
   font-size: 0.9375rem;
-  color: #374151;
+  color: var(--color-foreground);
 }
 
 .errorMsg {
   font-size: 0.8125rem;
-  color: #ef4444;
+  color: var(--color-error);
 }
