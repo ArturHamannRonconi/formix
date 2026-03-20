@@ -30,10 +30,21 @@ export async function listResponses(
   formId: string,
   offset = 0,
   limit = 20,
+  search?: string,
+  sortBy?: string,
+  sortDir?: 'asc' | 'desc',
 ): Promise<ListResponsesOutput> {
   const response = await httpClient.get<ListResponsesOutput>(
     `/forms/${formId}/responses`,
-    { params: { offset, limit } },
+    {
+      params: {
+        offset,
+        limit,
+        ...(search && { search }),
+        ...(sortBy && { sortBy }),
+        ...(sortDir && { sortDir }),
+      },
+    },
   );
   return response.data;
 }

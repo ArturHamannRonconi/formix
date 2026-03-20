@@ -76,7 +76,7 @@ export function FormSettings({ settings, onChange }: FormSettingsProps) {
           {settings.allowedEmailDomains.map((domain) => (
             <span
               key={domain}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-medium"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300 text-xs font-medium"
             >
               {domain}
               <button

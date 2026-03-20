@@ -7,6 +7,7 @@ import {
   updateForm,
   publishForm as publishFormService,
   closeForm as closeFormService,
+  expireForm as expireFormService,
   addQuestion as addQuestionService,
   updateQuestion as updateQuestionService,
   removeQuestion as removeQuestionService,
@@ -37,6 +38,7 @@ export function useFormBuilder(formId?: string) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isDirty, setIsDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(!!formId);
+  const [publicToken, setPublicToken] = useState<string | null>(null);
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export function useFormBuilder(formId?: string) {
           settings: form.settings,
         });
         setQuestions(form.questions.slice().sort((a, b) => a.order - b.order));
+        setPublicToken(form.publicToken ?? null);
         isFirstRender.current = false;
       })
       .catch((err) => {
@@ -91,18 +94,22 @@ export function useFormBuilder(formId?: string) {
   }, [currentFormId, formData]);
 
   const addQuestion = useCallback(
-    async (type: QuestionType) => {
+    async (type: QuestionType): Promise<{ formId: string }> => {
       let fId = currentFormId;
       if (!fId) {
         fId = await saveForm();
       }
 
       const order = questions.length;
+      const typesWithOptions = ['checkbox', 'radio', 'dropdown'];
+      const defaultOptions = typesWithOptions.includes(type) ? ['Opção 1'] : undefined;
+
       const { questionId } = await addQuestionService(fId, {
         type,
-        label: '',
+        label: 'Nova pergunta',
         required: false,
         order,
+        options: defaultOptions,
       });
 
       const newQuestion: Question = {
@@ -110,13 +117,16 @@ export function useFormBuilder(formId?: string) {
         formId: fId,
         organizationId: '',
         type,
-        label: '',
+        label: 'Nova pergunta',
         required: false,
         order,
+        options: defaultOptions,
         createdAt: new Date().toISOString(),
       };
 
       setQuestions((prev) => [...prev, newQuestion]);
+      setIsDirty(true);
+      return { formId: fId };
     },
     [currentFormId, questions.length, saveForm],
   );
@@ -154,12 +164,20 @@ export function useFormBuilder(formId?: string) {
 
   const publishForm = useCallback(async () => {
     if (!currentFormId) throw new Error('Formulário não salvo');
-    return publishFormService(currentFormId);
+    const result = await publishFormService(currentFormId);
+    setPublicToken(result.publicToken);
+    return result;
   }, [currentFormId]);
 
   const closeForm = useCallback(async () => {
     if (!currentFormId) throw new Error('Formulário não salvo');
     return closeFormService(currentFormId);
+  }, [currentFormId]);
+
+  const expireForm = useCallback(async () => {
+    if (!currentFormId) throw new Error('Formulário não salvo');
+    await expireFormService(currentFormId);
+    setPublicToken(null);
   }, [currentFormId]);
 
   // Mark not first render after initial load is done
@@ -176,6 +194,7 @@ export function useFormBuilder(formId?: string) {
     questions,
     isDirty,
     isLoading,
+    publicToken,
     addQuestion,
     updateQuestion,
     removeQuestion,
@@ -183,5 +202,6 @@ export function useFormBuilder(formId?: string) {
     saveForm,
     publishForm,
     closeForm,
+    expireForm,
   };
 }

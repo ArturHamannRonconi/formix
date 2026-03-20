@@ -5,7 +5,9 @@ import { Trash2, Plus, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { QuestionRenderer } from '@/modules/QuestionRenderer/QuestionRenderer';
 import type { Question } from '@/services/forms/forms.types';
+import type { PublicFormQuestion } from '@/services/responses/responses.types';
 
 interface QuestionEditorProps {
   question: Question;
@@ -31,6 +33,7 @@ const typeLabels: Record<string, string> = {
 
 export function QuestionEditor({ question, onUpdate, onRemove }: QuestionEditorProps) {
   const [newOption, setNewOption] = useState('');
+  const [previewValue, setPreviewValue] = useState<unknown>(undefined);
   const hasOptions = typesWithOptions.includes(question.type);
   const options = question.options ?? [];
 
@@ -53,7 +56,7 @@ export function QuestionEditor({ question, onUpdate, onRemove }: QuestionEditorP
   }
 
   return (
-    <div className="space-y-4 p-4 border border-slate-200 rounded-lg bg-white">
+    <div className="space-y-4 p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 space-y-3">
           <div className="space-y-1">
@@ -143,8 +146,15 @@ export function QuestionEditor({ question, onUpdate, onRemove }: QuestionEditorP
         </div>
       )}
 
-      <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-500">
-        Pré-visualização: [{typeLabels[question.type] ?? question.type}]
+      <div className="rounded-md bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 space-y-1.5">
+        <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">Pré-visualização</span>
+        <div className="pointer-events-none opacity-80">
+          <QuestionRenderer
+            question={question as unknown as PublicFormQuestion}
+            value={previewValue}
+            onChange={setPreviewValue}
+          />
+        </div>
       </div>
     </div>
   );

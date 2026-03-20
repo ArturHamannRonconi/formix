@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { acceptInvitation } from '@/services/invitations/invitations.service';
 import { setAccessToken, setRefreshToken } from '@/services/auth-token';
@@ -14,7 +14,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 type PageState = 'loading' | 'error' | 'existing-user' | 'new-user' | 'needs-credentials';
 
 function InvitePageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
@@ -39,7 +38,7 @@ function InvitePageContent() {
         const result = await acceptInvitation(token!);
         setAccessToken(result.accessToken);
         setRefreshToken(result.refreshToken);
-        router.push('/forms');
+        window.location.href = '/forms';
       } catch (err) {
         if (err instanceof ApiError) {
           if (err.statusCode === 400 && err.message?.includes('Name and password are required')) {
@@ -58,7 +57,7 @@ function InvitePageContent() {
     }
 
     tryAcceptAsExistingUser();
-  }, [token, router]);
+  }, [token]);
 
   async function handleAccept() {
     if (!token) return;
@@ -68,7 +67,7 @@ function InvitePageContent() {
       const result = await acceptInvitation(token);
       setAccessToken(result.accessToken);
       setRefreshToken(result.refreshToken);
-      router.push('/forms');
+      window.location.href = '/forms';
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.statusCode === 400 && err.message?.includes('Name and password are required')) {
@@ -97,8 +96,8 @@ function InvitePageContent() {
       setFormError('Nome é obrigatório.');
       return;
     }
-    if (password.length < 6) {
-      setFormError('A senha deve ter pelo menos 6 caracteres.');
+    if (password.length < 8) {
+      setFormError('A senha deve ter pelo menos 8 caracteres.');
       return;
     }
     if (password !== confirmPassword) {
@@ -111,7 +110,7 @@ function InvitePageContent() {
       const result = await acceptInvitation(token, { name: name.trim(), password });
       setAccessToken(result.accessToken);
       setRefreshToken(result.refreshToken);
-      router.push('/forms');
+      window.location.href = '/forms';
     } catch (err) {
       if (err instanceof ApiError && err.statusCode === 400) {
         setFormError('Convite inválido ou expirado.');
@@ -183,7 +182,7 @@ function InvitePageContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 aria-required="true"
               />
