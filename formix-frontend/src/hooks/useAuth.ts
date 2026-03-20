@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { getAccessToken, clearTokens } from '@/services/auth-token';
 import { httpClient } from '@/services/http-client';
 import type { AuthUser, AuthState } from '@/types/auth.types';
@@ -17,7 +16,6 @@ function decodeJwtPayload(token: string): Record<string, unknown> | null {
 }
 
 export function useAuth(): AuthState & { logout: () => Promise<void> } {
-  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,7 +49,7 @@ export function useAuth(): AuthState & { logout: () => Promise<void> } {
       // ignore logout errors — clear tokens regardless
     }
     clearTokens();
-    router.push('/login');
+    window.location.href = '/login';
   }
 
   return {

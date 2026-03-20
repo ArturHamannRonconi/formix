@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
   return (
     <PageContainer>
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">Perfil</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Perfil</h1>
 
       <div className="space-y-6 max-w-xl">
         <Card>

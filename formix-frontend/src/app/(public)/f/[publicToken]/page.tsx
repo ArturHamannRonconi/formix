@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import axios from 'axios';
 import { getPublicForm, submitResponse } from '@/services/responses/responses.service';
 import type { PublicForm, Answer } from '@/services/responses/responses.types';
 import { QuestionRenderer } from '@/modules/QuestionRenderer/QuestionRenderer';
@@ -97,10 +98,8 @@ export default function PublicFormPage() {
       setState('success');
     } catch (err: unknown) {
       setState('form');
-      const status = (err as { response?: { status?: number; data?: { message?: string } } })
-        ?.response?.status;
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data
-        ?.message;
+      const status = axios.isAxiosError(err) ? err.response?.status : undefined;
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : undefined;
       if (status === 409) {
         setSubmitError('Você já respondeu este formulário.');
       } else if (status === 403) {

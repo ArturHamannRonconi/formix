@@ -7,21 +7,21 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-foreground);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
   margin-left: 2px;
 }
 
 .textarea {
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.9375rem;
-  color: #111827;
-  background: #fff;
+  color: var(--color-foreground);
+  background: var(--color-background);
   outline: none;
   resize: vertical;
   min-height: 80px;
@@ -30,25 +30,25 @@
 }
 
 .textarea:focus-visible {
-  border-color: #7c6af7;
-  box-shadow: 0 0 0 3px rgba(124, 106, 247, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
 .textareaError {
-  border-color: #ef4444;
+  border-color: var(--color-error);
 }
 
 .textareaError:focus-visible {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 20%, transparent);
 }
 
 .textarea:disabled {
-  background: #f3f4f6;
-  color: #9ca3af;
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
   cursor: not-allowed;
 }
 
 .errorMsg {
   font-size: 0.8125rem;
-  color: #ef4444;
+  color: var(--color-error);
 }

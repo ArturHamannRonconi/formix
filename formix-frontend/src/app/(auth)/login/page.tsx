@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { login } from '@/services/auth/auth.service';
 import { setAccessToken, setRefreshToken } from '@/services/auth-token';
@@ -12,7 +11,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +37,7 @@ export default function LoginPage() {
       const response = await login(email, password);
       setAccessToken(response.accessToken);
       setRefreshToken(response.refreshToken);
-      router.push('/forms');
+      window.location.href = '/forms';
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.statusCode === 403) {

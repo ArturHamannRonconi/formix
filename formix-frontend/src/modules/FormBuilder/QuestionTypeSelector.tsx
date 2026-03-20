@@ -43,12 +43,12 @@ const questionTypes: QuestionTypeOption[] = [
 export function QuestionTypeSelector({ onSelect, onClose }: QuestionTypeSelectorProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-slate-900">Escolha o tipo de pergunta</h3>
+          <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Escolha o tipo de pergunta</h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 text-xl leading-none"
+            className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 text-xl leading-none"
             aria-label="Fechar"
           >
             ×
@@ -62,7 +62,7 @@ export function QuestionTypeSelector({ onSelect, onClose }: QuestionTypeSelector
                 onSelect(type);
                 onClose();
               }}
-              className="flex flex-col items-center gap-2 p-3 rounded-lg border border-slate-200 hover:border-violet-400 hover:bg-violet-50 transition-colors text-slate-700 hover:text-violet-700"
+              className="flex flex-col items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 dark:hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-violet-950/30 transition-colors text-slate-700 dark:text-slate-300 hover:text-violet-700 dark:hover:text-violet-300"
             >
               {icon}
               <span className="text-xs font-medium text-center leading-tight">{label}</span>

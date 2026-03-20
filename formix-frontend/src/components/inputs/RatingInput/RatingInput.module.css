@@ -7,11 +7,11 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-foreground);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
   margin-left: 2px;
 }
 
@@ -27,7 +27,7 @@
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
-  color: #d1d5db;
+  color: var(--color-muted-foreground);
   transition: color 0.1s;
   border-radius: 4px;
 }
@@ -38,7 +38,7 @@
 }
 
 .star:focus-visible {
-  outline: 2px solid #7c6af7;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -49,5 +49,5 @@
 
 .errorMsg {
   font-size: 0.8125rem;
-  color: #ef4444;
+  color: var(--color-error);
 }

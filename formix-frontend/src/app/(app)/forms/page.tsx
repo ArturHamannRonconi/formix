@@ -57,7 +57,7 @@ export default function FormsPage() {
   return (
     <PageContainer>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Formulários</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Formulários</h1>
         <Button onClick={handleCreate} className="bg-violet-600 hover:bg-violet-700">
           Criar formulário
         </Button>
@@ -71,7 +71,7 @@ export default function FormsPage() {
             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               statusFilter === option.value
                 ? 'bg-violet-600 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
             }`}
           >
             {option.label}
@@ -84,16 +84,16 @@ export default function FormsPage() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-xl border bg-card shadow-sm h-48 animate-pulse bg-slate-100"
+              className="rounded-xl border bg-card shadow-sm h-48 animate-pulse bg-slate-100 dark:bg-slate-800"
             />
           ))}
         </div>
       ) : forms.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="rounded-full bg-violet-100 p-5 mb-4">
+          <div className="rounded-full bg-violet-100 dark:bg-violet-900/30 p-5 mb-4">
             <FileText className="size-10 text-violet-500" />
           </div>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-2">
             {statusFilter ? 'Nenhum formulário encontrado' : 'Nenhum formulário ainda'}
           </h2>
           <p className="text-sm text-muted-foreground max-w-xs mb-6">

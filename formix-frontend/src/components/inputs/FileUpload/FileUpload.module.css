@@ -7,11 +7,11 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-foreground);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
   margin-left: 2px;
 }
 
@@ -19,11 +19,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--color-border);
   border-radius: 8px;
   padding: 24px;
-  background: #f9fafb;
-  color: #9ca3af;
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
   font-size: 0.9375rem;
   text-align: center;
   min-height: 80px;
@@ -31,5 +31,5 @@
 
 .errorMsg {
   font-size: 0.8125rem;
-  color: #ef4444;
+  color: var(--color-error);
 }

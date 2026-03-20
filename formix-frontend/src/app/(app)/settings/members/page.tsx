@@ -74,7 +74,7 @@ export default function MembersPage() {
   return (
     <PageContainer>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Membros</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Membros</h1>
       </div>
 
       {members.length === 0 ? (

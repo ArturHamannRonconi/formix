@@ -8,8 +8,8 @@ export async function listForms(status?: string): Promise<FormSummary[]> {
 }
 
 export async function getForm(id: string): Promise<FormDetail> {
-  const response = await httpClient.get<FormDetail>(`/forms/${id}`);
-  return response.data;
+  const response = await httpClient.get<{ form: Omit<FormDetail, 'questions'>; questions: FormDetail['questions'] }>(`/forms/${id}`);
+  return { ...response.data.form, questions: response.data.questions };
 }
 
 export async function createForm(data: CreateFormInput): Promise<{ formId: string }> {
@@ -34,6 +34,10 @@ export async function publishForm(id: string): Promise<{ publicToken: string; pu
 
 export async function closeForm(id: string): Promise<void> {
   await httpClient.post(`/forms/${id}/close`);
+}
+
+export async function expireForm(id: string): Promise<void> {
+  await httpClient.post(`/forms/${id}/expire`);
 }
 
 export async function addQuestion(

@@ -5,6 +5,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Post,
@@ -23,6 +24,7 @@ import { Public } from '@modules/auth/infra/decorators/public.decorator';
 import { CurrentUser, JwtPayload } from '@modules/auth/infra/decorators/current-user.decorator';
 import { SubmitResponseUseCase } from '@modules/responses/domain/usecases/submit-response.usecase';
 import { ListResponsesUseCase } from '@modules/responses/domain/usecases/list-responses.usecase';
+import { ExpireFormUseCase } from '@modules/responses/domain/usecases/expire-form.usecase';
 import { GetPublicFormUseCase } from '@modules/forms/domain/usecases/get-public-form.usecase';
 import { SubmitResponseDto, SubmitResponseResponseDto } from './submit-response.dto';
 
@@ -33,6 +35,7 @@ export class ResponsesController {
     private readonly submitResponseUseCase: SubmitResponseUseCase,
     private readonly listResponsesUseCase: ListResponsesUseCase,
     private readonly getPublicFormUseCase: GetPublicFormUseCase,
+    private readonly expireFormUseCase: ExpireFormUseCase,
   ) {}
 
   @Get('forms/public/:publicToken')
@@ -78,12 +81,42 @@ export class ResponsesController {
     return output.value;
   }
 
+  @Post('forms/:id/expire')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Expire a form: unpublish it and delete all responses' })
+  @ApiParam({ name: 'id', description: 'Form ID' })
+  @ApiResponse({ status: 200, description: 'Form expired and responses deleted' })
+  @ApiResponse({ status: 400, description: 'Form is not active' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  async expireForm(
+    @Param('id') id: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<{ expired: boolean }> {
+    const output = await this.expireFormUseCase.execute({
+      organizationId: user.organizationId,
+      formId: id,
+    });
+
+    if (output.isFailure) {
+      const msg = output.errorMessage;
+      if (msg.includes('not found')) throw new NotFoundException(msg);
+      throw new BadRequestException(msg);
+    }
+
+    return output.value;
+  }
+
   @Get('forms/:id/responses')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List paginated responses for a form' })
   @ApiParam({ name: 'id', description: 'Form ID' })
   @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default: 0)' })
   @ApiQuery({ name: 'limit', required: false, description: 'Number of results (default: 20)' })
+  @ApiQuery({ name: 'search', required: false, description: 'Search term across answer values' })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Sort column: "date" or a questionId' })
+  @ApiQuery({ name: 'sortDir', required: false, description: 'Sort direction: "asc" or "desc"' })
   @ApiResponse({ status: 200, description: 'Paginated list of responses' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden — form belongs to another organization' })
@@ -93,12 +126,18 @@ export class ResponsesController {
     @CurrentUser() user: JwtPayload,
     @Query('offset') offset?: string,
     @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortDir') sortDir?: string,
   ) {
     const output = await this.listResponsesUseCase.execute({
       organizationId: user.organizationId,
       formId,
       offset: offset ? parseInt(offset, 10) : 0,
       limit: limit ? parseInt(limit, 10) : 20,
+      search: search || undefined,
+      sortBy: sortBy || undefined,
+      sortDir: sortDir === 'asc' || sortDir === 'desc' ? sortDir : undefined,
     });
 
     if (output.isFailure) {
