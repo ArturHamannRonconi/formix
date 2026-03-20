@@ -69,6 +69,8 @@ export class RefreshTokenUseCase {
 
     const accessToken = this.jwtSign({
       sub: user.id.getValue(),
+      name: user.name,
+      email: user.email.getValue(),
       organizationId: org.id.getValue(),
       role,
     });

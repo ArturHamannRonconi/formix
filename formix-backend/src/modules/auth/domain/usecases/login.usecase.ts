@@ -1,4 +1,3 @@
-import { createHash } from 'crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users/domain/repositories/user.repository';
 import { IOrganizationRepository, ORGANIZATION_REPOSITORY } from '@modules/organizations/domain/repositories/organization.repository';
@@ -57,6 +56,8 @@ export class LoginUseCase {
 
     const accessToken = this.jwtSign({
       sub: user.id.getValue(),
+      name: user.name,
+      email: user.email.getValue(),
       organizationId: org.id.getValue(),
       role,
     });

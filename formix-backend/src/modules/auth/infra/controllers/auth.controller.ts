@@ -3,6 +3,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  ForbiddenException,
   HttpCode,
   Post,
   UnauthorizedException,
@@ -103,14 +104,17 @@ export class AuthController {
   @ApiOperation({ summary: 'Login with email and password' })
   @ApiBody({ type: LoginDto })
   @ApiResponse({ status: 200, description: 'Login successful', type: LoginResponseDto })
-  @ApiResponse({ status: 400, description: 'Invalid credentials or email not confirmed' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
+  @ApiResponse({ status: 403, description: 'Email not confirmed' })
   async login(@Body() dto: LoginDto): Promise<LoginResponseDto> {
     const output = await this.loginUseCase.execute(dto);
 
     if (output.isFailure) {
       if (output.errorMessage === 'Invalid credentials') {
         throw new UnauthorizedException(output.errorMessage);
+      }
+      if (output.errorMessage === 'Email not confirmed') {
+        throw new ForbiddenException(output.errorMessage);
       }
       throw new BadRequestException(output.errorMessage);
     }

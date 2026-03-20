@@ -172,7 +172,7 @@ describe('AuthController (integration)', () => {
       expect(response.status).toBe(401);
     });
 
-    it('should return 400 when email not confirmed', async () => {
+    it('should return 403 when email not confirmed', async () => {
       // Signup creates unconfirmed user
       await request(app.getHttpServer()).post('/auth/signup').send({
         name: 'Unconfirmed',
@@ -186,7 +186,7 @@ describe('AuthController (integration)', () => {
         password: 'SecurePass1',
       });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(403);
       expect(response.body.message).toBe('Email not confirmed');
     });
   });
