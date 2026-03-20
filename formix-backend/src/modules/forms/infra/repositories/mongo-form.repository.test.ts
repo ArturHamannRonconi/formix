@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { MongoFormRepository } from './mongo-form.repository';
+import { FormMapper } from './form.mapper';
 import { FormSchemaClass, FormSchema } from '../schemas/form.schema';
 import { FormAggregate } from '@modules/forms/domain/aggregate/form.aggregate';
 import { FormId } from '@modules/forms/domain/aggregate/value-objects/form-id.vo';
@@ -26,7 +27,7 @@ describe('MongoFormRepository (integration)', () => {
         MongooseModule.forRoot(mongod.getUri()),
         MongooseModule.forFeature([{ name: FormSchemaClass.name, schema: FormSchema }]),
       ],
-      providers: [MongoFormRepository],
+      providers: [FormMapper, MongoFormRepository],
     }).compile();
 
     repo = module.get(MongoFormRepository);

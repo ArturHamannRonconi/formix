@@ -4,6 +4,8 @@ import { FormSchemaClass, FormSchema } from './infra/schemas/form.schema';
 import { QuestionSchemaClass, QuestionSchema } from './infra/schemas/question.schema';
 import { MongoFormRepository } from './infra/repositories/mongo-form.repository';
 import { MongoQuestionRepository } from './infra/repositories/mongo-question.repository';
+import { FormMapper } from './infra/repositories/form.mapper';
+import { QuestionMapper } from './infra/repositories/question.mapper';
 import { FORM_REPOSITORY } from './domain/repositories/form.repository';
 import { QUESTION_REPOSITORY } from './domain/repositories/question.repository';
 import { CreateFormUseCase } from './domain/usecases/create-form.usecase';
@@ -29,6 +31,8 @@ import { FormsController } from './infra/controllers/forms.controller';
   ],
   controllers: [FormsController],
   providers: [
+    FormMapper,
+    QuestionMapper,
     { provide: FORM_REPOSITORY, useClass: MongoFormRepository },
     { provide: QUESTION_REPOSITORY, useClass: MongoQuestionRepository },
     CreateFormUseCase,

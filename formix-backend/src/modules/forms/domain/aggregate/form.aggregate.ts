@@ -91,6 +91,15 @@ export class FormAggregate {
     this.props.updatedAt = new Date();
   }
 
+  unpublish(): void {
+    if (!this.props.status.isActive()) {
+      throw new Error('Form can only be unpublished from active status');
+    }
+    this.props.publicToken = undefined;
+    this.props.status = FormStatus.draft();
+    this.props.updatedAt = new Date();
+  }
+
   isExpired(): boolean {
     if (!this.props.settings.expiresAt) return false;
     return new Date() > this.props.settings.expiresAt;

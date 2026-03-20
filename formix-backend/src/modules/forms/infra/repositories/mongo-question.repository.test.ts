@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { MongoQuestionRepository } from './mongo-question.repository';
+import { QuestionMapper } from './question.mapper';
 import { QuestionSchemaClass, QuestionSchema } from '../schemas/question.schema';
 import { QuestionEntity } from '@modules/forms/domain/aggregate/question.entity';
 import { QuestionId } from '@modules/forms/domain/aggregate/value-objects/question-id.vo';
@@ -28,7 +29,7 @@ describe('MongoQuestionRepository (integration)', () => {
         MongooseModule.forRoot(mongod.getUri()),
         MongooseModule.forFeature([{ name: QuestionSchemaClass.name, schema: QuestionSchema }]),
       ],
-      providers: [MongoQuestionRepository],
+      providers: [QuestionMapper, MongoQuestionRepository],
     }).compile();
 
     repo = module.get(MongoQuestionRepository);
