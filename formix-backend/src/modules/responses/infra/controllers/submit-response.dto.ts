@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEmail, IsString, ValidateNested } from 'class-validator';
+import { Allow, IsArray, IsEmail, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class AnswerDto {
@@ -8,6 +8,7 @@ export class AnswerDto {
   questionId: string;
 
   @ApiProperty({ example: 'My answer', description: 'Answer value (any type depending on question type)' })
+  @Allow()
   value: unknown;
 }
 

@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { MongoResponseEmailRepository } from './mongo-response-email.repository';
+import { ResponseEmailMapper } from './response-email.mapper';
 import { ResponseEmailSchemaClass, ResponseEmailSchema } from '../schemas/response-email.schema';
 import { ResponseEmailAggregate } from '@modules/responses/domain/aggregate/response-email.aggregate';
 
@@ -19,7 +20,7 @@ describe('MongoResponseEmailRepository (integration)', () => {
           { name: ResponseEmailSchemaClass.name, schema: ResponseEmailSchema },
         ]),
       ],
-      providers: [MongoResponseEmailRepository],
+      providers: [ResponseEmailMapper, MongoResponseEmailRepository],
     }).compile();
 
     repo = module.get(MongoResponseEmailRepository);

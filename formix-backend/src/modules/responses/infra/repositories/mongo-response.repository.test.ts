@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { MongoResponseRepository } from './mongo-response.repository';
+import { ResponseMapper } from './response.mapper';
 import { ResponseSchemaClass, ResponseSchema } from '../schemas/response.schema';
 import { ResponseAggregate } from '@modules/responses/domain/aggregate/response.aggregate';
 
@@ -24,7 +25,7 @@ describe('MongoResponseRepository (integration)', () => {
         MongooseModule.forRoot(mongod.getUri()),
         MongooseModule.forFeature([{ name: ResponseSchemaClass.name, schema: ResponseSchema }]),
       ],
-      providers: [MongoResponseRepository],
+      providers: [ResponseMapper, MongoResponseRepository],
     }).compile();
 
     repo = module.get(MongoResponseRepository);

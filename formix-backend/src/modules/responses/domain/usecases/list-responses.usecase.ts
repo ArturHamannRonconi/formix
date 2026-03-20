@@ -10,6 +10,9 @@ export interface ListResponsesInput {
   formId: string;
   offset?: number;
   limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortDir?: 'asc' | 'desc';
 }
 
 export interface ResponseDto {
@@ -52,8 +55,14 @@ export class ListResponsesUseCase {
     const limit = input.limit ?? 20;
 
     const [responses, total] = await Promise.all([
-      this.responseRepository.findByFormId(input.formId, { offset, limit }),
-      this.responseRepository.countByFormId(input.formId),
+      this.responseRepository.findByFormId(input.formId, {
+        offset,
+        limit,
+        search: input.search,
+        sortBy: input.sortBy,
+        sortDir: input.sortDir,
+      }),
+      this.responseRepository.countByFormId(input.formId, input.search),
     ]);
 
     return Output.ok({
