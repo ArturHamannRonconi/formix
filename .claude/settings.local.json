@@ -71,7 +71,28 @@
       "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/responses/)",
       "Bash(ls /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/[id]/)",
       "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(app\\\\\\)/forms/[id]/responses/page.tsx)",
-      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/[id]/page.tsx)"
+      "Bash(cat /home/arturronconi/personal-projects/formix/formix-frontend/src/app/\\\\\\(public\\\\\\)/forms/[id]/page.tsx)",
+      "Bash(for issue:*)",
+      "Bash(do)",
+      "Bash(grep -r \"from ''''@/\" src --include=\"*.tsx\" --include=\"*.ts\")",
+      "Bash(grep -r useAuth /home/arturronconi/personal-projects/formix/formix-frontend/src --include=*.tsx --include=*.ts)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/api/docs)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate",
+      "Bash(curl -s http://localhost:3001/api/docs-json)",
+      "Bash(curl -s \"http://localhost:3001/forms/public/a9be15e5-e7bd-4798-b562-b907844bd01f\")",
+      "Bash(curl -s http://localhost:3001/auth/login -X POST -H 'Content-Type: application/json' -d '{\"\"\"\"email\"\"\"\":\"\"\"\"test\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"test\"\"\"\"}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/auth/login -X POST -H 'Content-Type: application/json' -d '{\"\"email\"\":\"\"test\"\",\"\"password\"\":\"\"test\"\"}')",
+      "Bash(curl -s -X POST http://localhost:3001/responses/a9be15e5-e7bd-4798-b562-b907844bd01f -H 'Content-Type: application/json' -d '{\"\"\"\"email\"\"\"\":\"\"\"\"teste2@playwright.com\"\"\"\",\"\"\"\"answers\"\"\"\":[{\"\"\"\"questionId\"\"\"\":\"\"\"\"473e1ec1-e0c1-4129-8297-c4257a683883\"\"\"\",\"\"\"\"value\"\"\"\":\"\"\"\"Resposta de teste corrigida\"\"\"\"}]}')",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_press_key",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_type"
     ]
   }
 }
